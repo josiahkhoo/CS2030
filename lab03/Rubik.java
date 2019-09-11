@@ -8,6 +8,10 @@ public class Rubik implements Cloneable, SideViewable {
     private Face right;
     private Face down;
     private Face back;
+    
+    public Rubik(Rubik rubik) {
+        this(rubik.toIntArray());
+    }
 
     public Rubik(int[][][] grid) {
         for (int i = 0; i < 6; i++) {
@@ -30,6 +34,8 @@ public class Rubik implements Cloneable, SideViewable {
                     break;
                 case 5:
                     back = face;
+                    break;
+                default:
                     break;
             }
         }
@@ -71,17 +77,20 @@ public class Rubik implements Cloneable, SideViewable {
                     gridTop[2][i] = faceSides.get(i);
                     break;
                 case 3: case 4: case 5:
-                    gridRight[5-i][0] = faceSides.get(i);
+                    gridRight[5 - i][0] = faceSides.get(i);
                     break;
                 case 6: case 7: case 8:
-                    gridDown[0][i-6] = faceSides.get(i);
+                    gridDown[0][i - 6] = faceSides.get(i);
                     break;
                 case 9: case 10: case 11:
-                    gridLeft[11-i][2] = faceSides.get(i);
+                    gridLeft[11 - i][2] = faceSides.get(i);
+                    break;
+                default:
                     break;
             }
         }
-        return new Rubik(new int[][][]{gridTop, gridLeft, gridFront, gridRight, gridDown, gridBack});
+        return new Rubik(new int[][][]{gridTop, gridLeft, gridFront, gridRight,
+            gridDown, gridBack});
     }
 
     public Rubik right() {
@@ -91,31 +100,66 @@ public class Rubik implements Cloneable, SideViewable {
     public Rubik half() {
         return this.left().left();
     }
+    
+    public int[][][] toIntArray() {
+        int[][] gridFront = this.front.clone().toIntArray();
+        int[][] gridTop = this.top.clone().toIntArray();
+        int[][] gridLeft = this.left.clone().toIntArray();
+        int[][] gridRight = this.right.clone().toIntArray();
+        int[][] gridDown = this.down.clone().toIntArray();
+        int[][] gridBack = this.back.clone().toIntArray();
+
+        return new int[][][]{gridTop, gridLeft, gridFront, gridRight,
+            gridDown, gridBack};
+    }
+
 
     public Rubik rightView() {
         int[][] gridFront = this.right.clone().toIntArray();
         int[][] gridTop = this.top.clone().right().toIntArray();
         int[][] gridLeft = this.front.clone().toIntArray();
-        int[][] gridRight = this.back.clone().toIntArray();
+        int[][] gridRight = this.back.clone().half().toIntArray();
         int[][] gridDown = this.down.clone().left().toIntArray();
         int[][] gridBack = this.left.clone().half().toIntArray();
 
-        return new Rubik(new int[][][]{gridTop, gridLeft, gridFront, gridRight, gridDown, gridBack});
+        return new Rubik(new int[][][]{gridTop, gridLeft, gridFront, gridRight,
+            gridDown, gridBack});
     }
 
-    //fix this
-    //make new back rotate half 
     public Rubik leftView() {
-        return this.rightView().rightView().rightView().rightView().rightView().rightView().rightView();
+        int[][] gridFront = this.left.clone().toIntArray();
+        int[][] gridTop = this.top.clone().left().toIntArray();
+        int[][] gridLeft = this.back.clone().half().toIntArray();
+        int[][] gridRight = this.front.clone().toIntArray();
+        int[][] gridDown = this.down.clone().right().toIntArray();
+        int[][] gridBack = this.right.clone().half().toIntArray();
+
+        return new Rubik(new int[][][]{gridTop, gridLeft, gridFront, gridRight,
+            gridDown, gridBack});
     }
-    //this needs fixing
-    //make new left rotate half and new back rotate half
+
     public Rubik backView() {
-        return this.rightView().rightView().rightView().rightView().rightView().rightView();
+        int[][] gridFront = this.back.clone().half().toIntArray();
+        int[][] gridTop = this.top.clone().half().toIntArray();
+        int[][] gridLeft = this.right.clone().toIntArray();
+        int[][] gridRight = this.left.clone().toIntArray();
+        int[][] gridDown = this.down.clone().half().toIntArray();
+        int[][] gridBack = this.front.clone().half().toIntArray();
+
+        return new Rubik(new int[][][]{gridTop, gridLeft, gridFront, gridRight,
+            gridDown, gridBack});
     }
 
     public Rubik frontView() {
-        return this.rightView().rightView().rightView().rightView();
+        int[][] gridFront = this.front.clone().toIntArray();
+        int[][] gridTop = this.top.clone().toIntArray();
+        int[][] gridLeft = this.left.clone().toIntArray();
+        int[][] gridRight = this.right.clone().toIntArray();
+        int[][] gridDown = this.down.clone().toIntArray();
+        int[][] gridBack = this.back.clone().toIntArray();
+
+        return new Rubik(new int[][][]{gridTop, gridLeft, gridFront, gridRight,
+            gridDown, gridBack});
     }
 
     public Rubik upView() {
@@ -126,7 +170,8 @@ public class Rubik implements Cloneable, SideViewable {
         int[][] gridDown = this.front.clone().toIntArray();
         int[][] gridBack = this.down.clone().toIntArray();
         
-        return new Rubik(new int[][][]{gridTop, gridLeft, gridFront, gridRight, gridDown, gridBack});
+        return new Rubik(new int[][][]{gridTop, gridLeft, gridFront, gridRight,
+            gridDown, gridBack});
     }
 
     public Rubik downView() {
@@ -171,16 +216,18 @@ public class Rubik implements Cloneable, SideViewable {
                         output.append(gridLeft[i][j]);
                         break;
                     case 3: case 4: case 5:
-                        if (gridFront[i][j-3] < 10) {
+                        if (gridFront[i][j - 3] < 10) {
                             output.append(0);
                         }
-                        output.append(gridFront[i][j-3]);
+                        output.append(gridFront[i][j - 3]);
                         break;
                     case 6: case 7: case 8:
-                        if (gridRight[i][j-6] < 10) {
+                        if (gridRight[i][j - 6] < 10) {
                             output.append(0);
                         }
-                        output.append(gridRight[i][j-6]);
+                        output.append(gridRight[i][j - 6]);
+                        break;
+                    default:
                         break;
                 }
             }
