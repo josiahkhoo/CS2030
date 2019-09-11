@@ -1,4 +1,4 @@
-import Java.util.Scanner;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) { 
@@ -9,14 +9,13 @@ public class Main {
         int[][][] intArray = makeIntArray(faceArray);
         Rubik rubik = new Rubik(intArray);
 
-        Rubik rubik = manipulateRubik(rubik, scanner);
-        System.out.println(rubik);
-        
+        Rubik resultRubik = manipulateRubik(rubik, scanner);
+        System.out.println(resultRubik);
     }
 
-    public static void  populateFaceArray(int[] faceArray, Scanner scanner) {
-        for (i = 0; i < 54; i++) {
-            faceArray[0] = scanner.nextInt();
+    public static void populateFaceArray(int[] faceArray, Scanner scanner) {
+        for (int i = 0; i < 54; i++) {
+            faceArray[i] = scanner.nextInt();
         }
     }
 
@@ -26,7 +25,7 @@ public class Main {
         for (int k = 0; k < 6; k++) {
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
-                    grid[k][i][j] = faceArray[d++];
+                    grid[k][i][j] = array[d++];
                 }
             }
         }
@@ -37,41 +36,59 @@ public class Main {
         while (scanner.hasNext() == true) {
             String instruction = scanner.next();
             switch (instruction) {
-                case 'F':
+                case "F":
+                    rubik = new Rubik(rubik).right();
                     break;
-                case 'R':
+                case "R":
+                    rubik = new RubikRight(rubik).right();
                     break;
-                case 'U':
+                case "U":
+                    rubik = new RubikUp(rubik).right();
                     break;
-                case 'L':
+                case "L":
+                    rubik = new RubikLeft(rubik).right();
                     break;
-                case 'B':
+                case "B":
+                    rubik = new RubikBack(rubik).right();
                     break;
-                case 'D':
+                case "D":
+                    rubik = new RubikDown(rubik).right();
                     break;
                 case "F\'":
+                    rubik = new Rubik(rubik).left();
                     break;
                 case "R\'":
+                    rubik = new RubikRight(rubik).left();
                     break;
                 case "U\'":
+                    rubik = new RubikUp(rubik).left();
                     break;
                 case "L\'":
+                    rubik = new RubikLeft(rubik).left();
                     break;
                 case "B\'":
+                    rubik = new RubikBack(rubik).left();
                     break;
                 case "D\'":
+                    rubik = new RubikDown(rubik).left();
                     break;
                 case "F2":
+                    rubik = new Rubik(rubik).half();
                     break;
                 case "R2":
+                    rubik = new RubikRight(rubik).half();
                     break;
                 case "U2":
+                    rubik = new RubikUp(rubik).half();
                     break;
                 case "L2":
+                    rubik = new RubikLeft(rubik).half();
                     break;
                 case "B2":
+                    rubik = new RubikBack(rubik).half();
                     break;
                 case "D2":
+                    rubik = new RubikDown(rubik).half();
                     break;
                 default:
                     break;
