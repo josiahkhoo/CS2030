@@ -1,16 +1,16 @@
 public interface SideViewable {
 
-    public Rubik rightView();
+    public Object rightView();
 
-    public Rubik leftView();
+    public Object leftView();
 
-    public Rubik upView();
+    public Object upView();
 
-    public Rubik downView();
+    public Object downView();
 
-    public Rubik backView();
+    public Object backView();
 
-    public Rubik frontView();
+    public Object frontView();
 }
 
      

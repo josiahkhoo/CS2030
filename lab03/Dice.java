@@ -29,9 +29,9 @@ public class Dice implements SideViewable {
     }
 
     public Dice upView() {
-        String[] unfolded = dice.unfold();
-        swap(unfolded[1], unfolded[0], unfolded[3], unfolded[5]);
-        return new Dice(unfolded);
+        String[] unfolded = this.unfold();
+        return new Dice(new String[]{unfolded[3], unfolded[0], unfolded[2],
+            unfolded[5], unfolded[4], unfolded[1]});
     }
 
     public Dice downView() {
@@ -39,9 +39,9 @@ public class Dice implements SideViewable {
     }
 
     public Dice leftView() {
-        String[] unfolded = dice.unfold();
-        swap(unfolded[4], unfolded[3], unfolded[2], unfolded[1]);
-        return new Dice(unfolded);
+        String[] unfolded = this.unfold();
+        return new Dice(new String[]{unfolded[0], unfolded[4], unfolded[1],
+            unfolded[2], unfolded[3], unfolded[5]});
     }
 
     public Dice rightView() {
@@ -49,31 +49,25 @@ public class Dice implements SideViewable {
     }
 
     public Dice backView() {
-        return this.backView().backView().backView();
-    }
-        
-    public static void swap(String obj1, String obj2, String obj3, String obj4) {
-        String temp = new String();
-        temp = obj1;
-        obj1 = obj2;
-        obj2 = obj3;
-        obj3 = obj4;
-        obj4 = temp;
+        return this.rightView().rightView();
     }
 
+    public Dice frontView() {
+        return new Dice(this.unfold());
+    }
+        
     @Override
     public String toString() {
         StringBuilder output = new StringBuilder();
         output.append("\n");
         output.append(top);
-        output.append("   \n");
+        output.append("\n");
         output.append(front);
         output.append(right);
         output.append(back);
         output.append(left);
-        output.append("\n...");
+        output.append("\n   ");
         output.append(down);
-        output.append("\n");
         return output.toString();
     }
 }
