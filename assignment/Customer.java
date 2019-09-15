@@ -2,10 +2,16 @@ public class Customer {
 
     private final int id;
     private final double arrivalTime;
-
+    
+    /** Constructor to initialise a Customer */
     public Customer(int id, double arrivalTime) {
         this.id = id;
         this.arrivalTime = arrivalTime;
+    }
+    
+    /** Getter for arrivalTime */
+    public double getArrivalTime() {
+        return this.arrivalTime;
     }
 
     @Override
