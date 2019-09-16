@@ -4,18 +4,19 @@ import java.util.ArrayList;
 public class Order {
     private Menu menu;
     private List<Food> foods;
-    private static int total = 0;
+    private static int total;
 
     public Order(Menu menu) {
         this.menu = menu;
-        this.foods = new ArrayList<>(); 
+        this.foods = new ArrayList<>();
+        this.total = 0;
     }
 
     public Order add(int[] intArray) {
         Iterable<SubMenu> subMenus = this.menu.getBigMenu();
         for (int n : intArray) {
             for (SubMenu subMenu : subMenus) {
-                Iterable<? extends Food> foods = subMenu.getFoods();
+                Iterable<Food> foods = subMenu.getFoods();
                 for (Food food : foods) {
                     if (food.getId() == n) {
                         this.foods.add(food);

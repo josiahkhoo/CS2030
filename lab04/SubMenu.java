@@ -4,14 +4,14 @@ import java.util.List;
 public class SubMenu {
 
     private String type;
-    private List<? extends Food> foods;
+    private List<Food> foods;
 
     public SubMenu(String type) {
         this.type = type;
         this.foods = new ArrayList<>();
     }
 
-    public List<? extends Food> getFoods() {
+    public List<Food> getFoods() {
         return this.foods;
     }
 

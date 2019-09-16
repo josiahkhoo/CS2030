@@ -6,7 +6,7 @@ public class Combo extends Food {
     private Order order;
 
     public Combo(int id, String name, Order order) {
-        super(id, "Combo", name, order.getTotal());
+        super(id, "Combo", name, order.getTotal() - 50);
         this.order = order;
     }
 

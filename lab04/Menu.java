@@ -12,9 +12,9 @@ public class Menu {
     public Menu add(String type, String name, List<Integer> intList) {
         Order order = new Order(this);
         int[] intArray = new int[intList.size()];
-        int count = 0;
+        int track = 0;
         for (int n : intList) {
-            intArray[count++] = n;
+            intArray[track++] = n;
         }
         order.add(intArray);
         Combo combo = new Combo(count++, name, order);
