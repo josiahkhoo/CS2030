@@ -28,7 +28,6 @@ public class Menu {
         SubMenu subMenu = new SubMenu(type);
         subMenu.add(combo);
         bigMenu.add(subMenu);
-        System.out.println(combo);
         return this;
     }
 
@@ -44,16 +43,26 @@ public class Menu {
         SubMenu subMenu = new SubMenu(type);
         subMenu.add(food);
         bigMenu.add(subMenu);
-        System.out.println(food);
         return this;
     }
 
     public Menu print() {
         Iterable<SubMenu> subMenus = bigMenu;
         for (SubMenu subMenu : subMenus) {
+            if (subMenu.getType().equals("Combo")) {
+                continue;
+            }
             Iterable<Food> foods = subMenu.getFoods();
             for (Food food : foods) {
                 System.out.println(food);
+            }
+        }
+        for (SubMenu subMenu : subMenus) {
+            if (subMenu.getType().equals("Combo")) {
+                Iterable<Food> foods = subMenu.getFoods();
+                for (Food food : foods) {
+                    System.out.println(food);
+                }
             }
         }
         return this;

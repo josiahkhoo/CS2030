@@ -11,6 +11,10 @@ public class SubMenu {
         this.foods = new ArrayList<>();
     }
 
+    public String getType() {
+        return this.type;
+    }
+
     public List<Food> getFoods() {
         return this.foods;
     }
