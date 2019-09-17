@@ -7,7 +7,7 @@ class Main {
         Scanner sc = new Scanner(System.in);
         Menu menu = new Menu();
 
-        while(sc.next().equals("add")) {
+        while (sc.next().equals("add")) {
             String type = sc.next();
             String name = sc.next();
             if (type.equals("Combo")) {
@@ -37,7 +37,7 @@ class Main {
         System.out.println("\n--- Order ---");
         System.out.println(order);
 
-        }
+    }
 
     public static int[] getIntArray(List<Integer> intList) {
         int[] intArray = new int[intList.size()];
@@ -46,7 +46,7 @@ class Main {
             intArray[track++] = n;
         }
         return intArray;
-        }
+    }
 
 }
 
