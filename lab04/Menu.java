@@ -34,9 +34,8 @@ public class Menu {
     public Menu add(String type, String name, int price) {
         Food food = new Food(count++, type, name, price);
         for (SubMenu availType : bigMenu) {
-            if (availType.toString() == food.getType()) {
+            if (availType.getType().equals(food.getType())) {
                 availType.add(food);
-                System.out.println(food);
                 return this;
             }
         }
