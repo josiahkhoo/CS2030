@@ -9,7 +9,7 @@ public class Menu {
         this.bigMenu = new ArrayList<>();
     }
 
-    public Menu add(String type, String name, List<Integer> intList) {
+    public Combo add(String type, String name, List<Integer> intList) {
         Order order = new Order(this);
         int[] intArray = new int[intList.size()];
         int track = 0;
@@ -22,27 +22,27 @@ public class Menu {
             if (availType.toString() == combo.getType()) {
                 availType.add(combo);
                 System.out.println(combo);
-                return this;
+                return combo;
             }
         }
         SubMenu subMenu = new SubMenu(type);
         subMenu.add(combo);
         bigMenu.add(subMenu);
-        return this;
+        return combo;
     }
 
-    public Menu add(String type, String name, int price) {
+    public Food add(String type, String name, int price) {
         Food food = new Food(count++, type, name, price);
         for (SubMenu availType : bigMenu) {
             if (availType.getType().equals(food.getType())) {
                 availType.add(food);
-                return this;
+                return food;
             }
         }
         SubMenu subMenu = new SubMenu(type);
         subMenu.add(food);
         bigMenu.add(subMenu);
-        return this;
+        return food;
     }
 
     public Menu print() {
