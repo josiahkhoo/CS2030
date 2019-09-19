@@ -21,7 +21,6 @@ public class Menu {
         for (SubMenu availType : bigMenu) {
             if (availType.toString() == combo.getType()) {
                 availType.add(combo);
-                System.out.println(combo);
                 return combo;
             }
         }
@@ -45,7 +44,7 @@ public class Menu {
         return food;
     }
 
-    public Menu print() {
+    public void print() {
         Iterable<SubMenu> subMenus = bigMenu;
         for (SubMenu subMenu : subMenus) {
             if (subMenu.getType().equals("Combo")) {
@@ -64,7 +63,7 @@ public class Menu {
                 }
             }
         }
-        return this;
+        return;
     }
 
     public List<SubMenu> getBigMenu() {
