@@ -8,16 +8,18 @@ public class Main {
     public static void main(String[] args) { 
         Scanner scanner = new Scanner(System.in); 
         Server server = new Server();
+        PriorityQueue<Customer> customerQueue = new PriorityQueue<Customer>(
+            new SortByTime());
         while (scanner.hasNext()) {
             //create new customer
             Customer customer = new Customer(++count, scanner.nextDouble());
-            //print customer arrives
-            System.out.println(customer);
-            server = server.serve(customer);
-            //print new status of customer
-            System.out.println(customer);
+            //add customer into queue
+            customerQueue.add(customer);
         }
-        printCount();
+        Simulator serverSimulator = new Simulator(customerQueue, server);
+        serverSimulator.run();
+        System.out.println(serverSimulator);
+        scanner.close();
     }
 
     public static void printCount() {

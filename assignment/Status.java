@@ -1,8 +1,10 @@
 enum Status {
     
     ARRIVES(1),
-    SERVED(2),
-    LEAVES(3);
+    WAITS(2),
+    SERVED(3),
+    DONE(4),
+    LEAVES(5);
 
     private final int value;
     
@@ -24,12 +26,19 @@ enum Status {
                 string = "arrives";
                 break;
             case 2:
-                string = "served";
+                string = "waits";
                 break;
             case 3:
+                string = "served";
+                break;
+            case 4:
+                string = "done";
+                break;
+            case 5:
                 string = "leaves";
                 break;
             default:
+                break;
         }
         return string;
     }
