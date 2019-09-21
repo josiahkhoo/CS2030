@@ -76,6 +76,14 @@ public class Customer {
         }
     }
 
+    public Boolean isArrive() {
+        if (this.status == Status.ARRIVES) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     @Override
     public String toString() {
         String output = new String();
