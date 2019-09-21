@@ -2,12 +2,14 @@ import java.util.PriorityQueue;
 import java.util.Comparator;
 
 public class Server {
-    
+
+    private int id;    
     private Customer customer;
     private Customer waiting;
     
     /** Constructor to initalise Server */
-    public Server() {
+    public Server(int id) {
+        this.id = id;
         this.customer = null;
         this.waiting = null;
     }
@@ -27,18 +29,12 @@ public class Server {
     }
 
     public void serveFuture(Customer waitingCustomer) {
-        waitingCustomer.setServed();
+        waitingCustomer.setServed(this.id);
     }
     
     public void serve(Customer customer) {
-       if (this.waiting == customer) {
-            System.out.println("called serve");  
-            this.waiting = null;
-            this.customer = customer;
-        } else {
         this.customer = customer;
-        customer.setServed();
-        }
+        customer.setServed(this.id);
     }
 
     public void makeLeave(Customer customer) {
@@ -62,13 +58,17 @@ public class Server {
         }
     }
 
+    public int getId() {
+        return this.id;
+    }
+
     public void makeDone(Customer customer) {
         customer.setDone();
     }
 
     public void makeWait(Customer customer) {
         this.waiting = customer;
-        customer.setWait();
+        customer.setWait(this.id);
     }
 
     public void release(Customer customer) {

@@ -6,8 +6,13 @@ public class Main {
     static int count = 0;
 
     public static void main(String[] args) { 
-        Scanner scanner = new Scanner(System.in); 
-        Server server = new Server();
+        Scanner scanner = new Scanner(System.in);
+        int numberServers = scanner.nextInt();
+        Server[] servers = new Server[numberServers];
+            for (int i = 1; i <= numberServers; i++) {
+                Server server = new Server(i);
+                servers[i-1] = server;
+            } 
         PriorityQueue<Customer> customerQueue = new PriorityQueue<Customer>(
             new SortByTime());
         while (scanner.hasNext()) {
@@ -16,7 +21,7 @@ public class Main {
             //add customer into queue
             customerQueue.add(customer);
         }
-        Simulator serverSimulator = new Simulator(customerQueue, server);
+        Simulator serverSimulator = new Simulator(customerQueue, servers);
         serverSimulator.run();
         System.out.println(serverSimulator);
         scanner.close();

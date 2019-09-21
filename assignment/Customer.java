@@ -3,12 +3,14 @@ public class Customer {
     private final int id;
     private double time;
     private Status status;
+    private int serverId;
     
     /** Constructor to initialise a Customer */
     public Customer(int id, double arrivalTime) {
         this.id = id;
         this.time = arrivalTime;
         this.status = Status.ARRIVES;
+        this.serverId = 0;
     }
     
     /** Getter for time */
@@ -29,7 +31,8 @@ public class Customer {
         this.status = Status.ARRIVES;
     }
 
-    public void setWait() {
+    public void setWait(int serverId) {
+        this.serverId = serverId;
         this.status = Status.WAITS;
     }
 
@@ -37,8 +40,13 @@ public class Customer {
         this.time = time;
     }
 
+    public int getServerId() {
+        return this.serverId;
+    }
+
     /** Setter for status of this instant of Customer to be SERVED */
-    public void setServed() {
+    public void setServed(int serverId) {
+        this.serverId = serverId;
         this.status = Status.SERVED;
     }
 
@@ -71,8 +79,11 @@ public class Customer {
     @Override
     public String toString() {
         String output = new String();
-        output = String.format("%.3f %d %s", this.time, this.id,
-               this.status); 
+        output = String.format("%.3f %d %s", this.time, this.id, 
+            this.status.getMessage());
+        if (this.serverId != 0) {
+            output += String.format(" %d", this.serverId);
+        }
         return output;
     }
 }

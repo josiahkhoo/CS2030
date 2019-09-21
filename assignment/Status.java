@@ -1,13 +1,39 @@
 enum Status {
     
-    ARRIVES(1),
-    WAITS(2),
-    SERVED(3),
-    DONE(4),
-    LEAVES(5);
+    ARRIVES(1) {
+        @Override
+        public String getMessage() {
+            return new String("arrives");
+        } 
+    },
+    WAITS(2) {
+        @Override
+        public String getMessage() {
+            return new String("waits to be served by");
+        }
+    },
+    SERVED(3) {
+        @Override
+        public String getMessage() {
+            return new String("served by");
+        }
+    },
+    DONE(4) {
+        @Override
+        public String getMessage() {
+            return new String("done serving by");
+        }
+    },
+    LEAVES(5) {
+        @Override
+        public String getMessage() {
+            return new String("leaves");
+        }
+    };
 
     private final int value;
     
+    public abstract String getMessage();
     /** Constructor to initialise status when declared based on constants */
     Status(int value) {
         this.value = value;
