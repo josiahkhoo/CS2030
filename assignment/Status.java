@@ -1,3 +1,6 @@
+/**
+ * This is a Status enum that will be used in the customer class.
+ */
 enum Status {
     
     ARRIVES(1) {
@@ -34,20 +37,32 @@ enum Status {
     private final int value;
     
     public abstract String getMessage();
-    /** Constructor to initialise status when declared based on constants */
+
+    /** 
+     * Creates a Status with the specified value.
+     * @param   value   value corresponding to status
+     */ 
     Status(int value) {
         this.value = value;
     }
-    
-    /** Getter to get value of status */
+  
+    /**
+     * this method returns the value of this status.
+     * @return  {@link  Status#value}
+     */
     public int getValue() {
         return this.value;
     }
-
+    
+    /**
+     * This method overrides the toString() method of Object and returns a
+     * string corresponding to this status.
+     * @return  String
+     */
     @Override
     public String toString() {
         String string = new String();
-        switch(value) {
+        switch (value) {
             case 1:
                 string = "arrives";
                 break;

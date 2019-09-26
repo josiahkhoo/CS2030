@@ -1,5 +1,8 @@
 import java.util.PriorityQueue;
 
+/**
+ * This is the simulator class that will be runned.
+ */
 public class Simulator {
     private PriorityQueue<Customer> queue;
     private Server[] servers;
@@ -7,7 +10,12 @@ public class Simulator {
     private Double totalWaitingTime;
     private int numberServed;
     private int totalCustomers;
-
+    
+    /**
+     * Creates a Simulator with a queue of customers and array of servers.
+     * @param   queue   queue of customers
+     * @param   servers array of servers
+     */
     public Simulator(PriorityQueue<Customer> queue, Server[] servers) {
         this.queue = queue;
         this.servers = servers;
@@ -16,7 +24,10 @@ public class Simulator {
         numberServed = 0;
         totalCustomers = queue.size();
     }
-
+    
+    /**
+     * This methods runs the simulator and prints out changes in events.
+     */
     public void run() {
         int n = getNumberServers();
 
@@ -48,9 +59,9 @@ public class Simulator {
 
                 if ((customer.getServerId() != server.getId()) && 
                     (customer.getServerId() != 0)) {
-                        queue.add(customer);
-                        k += 1;
-                        continue;
+                    queue.add(customer);
+                    k += 1;
+                    continue;
                 }
 
                 if (customer.isArrive() && (allServing == false)) {
@@ -101,29 +112,56 @@ public class Simulator {
                     break;
                 }
 
-            continue;
+                continue;
             }
         }
     }
-
+    
+    /**
+     * This method returns the average waiting time of
+     * all the customers in the queue.
+     * @return  average waiting time
+     */
     public Double averageWaitingTime() {
         return totalWaitingTime / numberServed;
     }
-
+    
+    /**
+     * This method returns the total number of served
+     * customers in the queue.
+     * @return  total served customers
+     */
     public int getNumberServed() {
         return numberServed;
     }
-
+    
+    /**
+     * This method returns the total number of customers
+     * who left the queue.
+     * @return  total left customers
+     */
     public int getNumberLeft() {
         return totalCustomers - numberServed;
     }
-
+    
+    /**
+     * This method returns the number of servers in the
+     * array of servers.
+     * @return  number of servers
+     */
     public int getNumberServers() {
         return servers.length;
     } 
 
+    /**
+     * This method overrides the toString() method of Object and returns a
+     * string in the format of {@link Simulator#averageWaitingTime()}
+     * {@link Simulator#getNumberServed()} {@link Simulator#getNumberLeft()}.
+     * @return  String
+     */
     @Override
     public String toString() {
-        return String.format("[%.3f %d %d]", averageWaitingTime(), getNumberServed(), getNumberLeft());
+        return String.format("[%.3f %d %d]", averageWaitingTime(), 
+                getNumberServed(), getNumberLeft());
     }
 }
