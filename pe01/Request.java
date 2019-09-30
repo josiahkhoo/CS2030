@@ -25,9 +25,12 @@ public class Request {
     @Override
     public String toString() {
         String timeString = new String();
+        if (time < 1000) {
+            timeString += "0";
+        }
         timeString += String.format("%d", time);
         return String.format("%dkm for %dpax @ %shrs", distance, passengers,
-                timeString);
+                time);
     }
 
 }
