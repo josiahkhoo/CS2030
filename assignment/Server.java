@@ -21,7 +21,7 @@ public class Server {
     }
     
     /**
-     * This method returns the current customer of this server.
+     * Returns the current customer of this server.
      * @return  {@link Server#customer} 
      */
     public Customer getCustomer() {
@@ -29,7 +29,7 @@ public class Server {
     }
 
     /**
-     * This method returns the current waiting customer of this server.
+     * Returns the current waiting customer of this server.
      * @return {@link Server#waiting}
      */
     public Customer getWaiting() {
@@ -41,8 +41,8 @@ public class Server {
      * to the finished time of the current customer.
      * @param   waitingCustomer the waiting customer
      */
-    public Double adjustWaitingTime(Customer waitingCustomer) {
-        Double waitingTime = this.customer.getTime() - waitingCustomer.getTime();
+    public double adjustWaitingTime(Customer waitingCustomer) {
+        double waitingTime = this.customer.getTime() - waitingCustomer.getTime();
         waitingCustomer.setTime(this.customer.getTime());
         return waitingTime;
     }
@@ -75,11 +75,11 @@ public class Server {
     }
     
     /**
-     * This method returns true if the specified customer is
+     * Returns true if the specified customer is
      * being served by this server else return false.
      * @param   customer    the specified customer
      */
-    public Boolean isServing(Customer customer) {
+    public boolean isServing(Customer customer) {
         if (this.customer == customer) {
             return true;
         } else {
@@ -88,11 +88,11 @@ public class Server {
     }
 
     /**
-     * This method returns true if the specified customer is
+     * Returns true if the specified customer is
      * waiting to be served by this server else return false.
      * @param   customer    the specified customer
      */
-    public Boolean isWaiting(Customer customer) {
+    public boolean isWaiting(Customer customer) {
         if (this.waiting == customer) {
             return true;
         } else {
@@ -101,7 +101,7 @@ public class Server {
     }
     
     /**
-     * This method returns the id of this server.
+     * Returns the id of this server.
      * @return {link Server#id}
      */
     public int getId() {

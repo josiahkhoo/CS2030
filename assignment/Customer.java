@@ -21,7 +21,7 @@ public class Customer {
     }
     
     /**
-     * This method returns the current time assigned to this customer.
+     * Returns the current time assigned to this customer.
      * @return  the time assigned to this customer
      */
     public double getTime() {
@@ -29,7 +29,7 @@ public class Customer {
     }
 
     /**
-     * This method returns this customer's ID.
+     * Returns this customer's ID.
      * @return  id assigned to this customer
      */
     public double getId() {
@@ -37,7 +37,7 @@ public class Customer {
     }
     
     /**
-     * This method return this customer's status.
+     * Return this customer's status.
      * @return  the status of this customer
      */
     public Status getStatus() {
@@ -71,7 +71,7 @@ public class Customer {
     }
     
     /**
-     * This method returns this customer's serverId.
+     * Returns this customer's serverId.
      * @return  the serverId of this customer
      */
     public int getServerId() {
@@ -106,10 +106,10 @@ public class Customer {
     }
     
     /**
-     * This method returns true if the status of this customer is {@link Status#SERVED}
+     * Returns true if the status of this customer is {@link Status#SERVED}
      * else it will return false.
      */
-    public Boolean isServed() {
+    public boolean isServed() {
         if (this.status == Status.SERVED) {
             return true;
         } else {
@@ -118,10 +118,10 @@ public class Customer {
     }
 
     /**
-     * This method returns true if the status of this customer is {@link Status#DONE}
+     * Returns true if the status of this customer is {@link Status#DONE}
      * else it will return false.
      */
-    public Boolean isDone() {
+    public boolean isDone() {
         if (this.status == Status.DONE) {
             return true;
         } else {
@@ -130,10 +130,10 @@ public class Customer {
     }
 
     /**
-     * This method returns true if the status of this customer is
+     * Returns true if the status of this customer is
      * {@link Status#DONE} else it will return false.
      */
-    public Boolean isArrive() {
+    public boolean isArrive() {
         if (this.status == Status.ARRIVES) {
             return true;
         } else {
