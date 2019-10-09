@@ -1,17 +1,20 @@
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.function.Function;
 
 class Trace<T> {
 
     private List<T> history;
     private T object;
 
-    private Trace(T object, List<T> history) {
+    protected Trace(T object, List<T> history) {
         this.history = history;
         this.object = object;
     }
-
-    public static <T> Trace of(T... objects) {
+    
+    @SafeVarargs
+    public static <T> Trace<T> of(T... objects) {
         T objectInitial = objects[0];
         List<T> history = new ArrayList<>();
         int arglength = objects.length;
@@ -33,7 +36,7 @@ class Trace<T> {
         return history;
     }
 
-    public Trace back(int n) {
+    public Trace<T> back(int n) {
         int historyBackSize = history.size() - n;
         if (historyBackSize < 1) {
             historyBackSize = 1;
@@ -45,12 +48,26 @@ class Trace<T> {
         }
         return new Trace<T>(objectBack, historyBack);
     }
-
-    public Trace map(Function function) {
-        T objectNew = function(this.get());
-        List<T> historyNew = new ArrayList<>(this.history());
+    
+    @SuppressWarnings("unchecked")
+    public <R> Trace<R> map(Function<? super T, ? extends R> function) {
+        R objectNew = function.apply(this.get());
+        List<R> historyNew = new ArrayList<>();
+        for (T object : history) {
+            historyNew.add((R) object);
+        }
         historyNew.add(objectNew);
-        return new Trace<T>(objectNew, historyNew);
+        return new Trace<R>(objectNew, historyNew);
+    }
+
+    @SuppressWarnings("unchecked")
+    public Trace<T> flatMap(Function<? super T, ? extends Trace<? extends T>> function) {
+        Trace<? extends T> newTrace = function.apply(this.get());
+        //removes last object
+        this.history.remove(this.get());
+        //appends the new items into the history
+        this.history.addAll(newTrace.history());
+        return new Trace<T>(newTrace.get(), this.history());
     }
 
     @Override
@@ -58,7 +75,7 @@ class Trace<T> {
         if (this == obj) {
             return true;
         } else if (obj instanceof Trace) {
-            Trace trace = (Trace) obj;
+            Trace<?> trace = (Trace) obj;
             return ((this.get().equals(trace.get())) && 
                     (this.history().equals(trace.history())));
         } else {
