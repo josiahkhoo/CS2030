@@ -30,14 +30,14 @@ public class Main {
             List<Booking> bookings) {
         while (scanner.hasNext()) {
             String driverType = scanner.next();
-            if (driverType == "NormalCab") {
+            if (driverType.equals("NormalCab")) {
                 CarDriver driver = new NormalCab(scanner.next(), scanner.nextInt());
                 Booking booking1 = new Booking(driver, new JustRide(), request);
                 Booking booking2 = new Booking(driver, new TakeACab(), request);
                 bookings.add(booking1);
                 bookings.add(booking2);
                 
-            } else if (driverType == "PrivateCar") {
+            } else if (driverType.equals("PrivateCar")) {
                 CarDriver driver = new PrivateCar(scanner.next(), scanner.nextInt());
                 Booking booking1 = new Booking(driver, new JustRide(), request);
                 Booking booking2 = new Booking(driver, new ShareARide(), request);
@@ -48,7 +48,7 @@ public class Main {
     }
 
     private static void printBookings(List<Booking> bookings) {
-        for (Booking booking : Iterable<Booking> bookings) {
+        for (Booking booking : bookings) {
             System.out.println(booking);
         }
     }

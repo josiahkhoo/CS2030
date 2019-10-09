@@ -30,7 +30,7 @@ public class Request {
         }
         timeString += String.format("%d", time);
         return String.format("%dkm for %dpax @ %shrs", distance, passengers,
-                timeString);
+                time);
     }
 
 }
