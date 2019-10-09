@@ -7,7 +7,7 @@ public class Simulator {
     private PriorityQueue<Customer> queue;
     private Server[] servers;
 
-    private Double totalWaitingTime;
+    private double totalWaitingTime;
     private int numberServed;
     private int totalCustomers;
     
@@ -33,8 +33,8 @@ public class Simulator {
 
         while (queue.isEmpty() == false) {
             int k = 0;
-            Boolean allServing = false;
-            Boolean allWaiting = false;
+            boolean allServing = false;
+            boolean allWaiting = false;
             while (k < n) {
                 if (queue.isEmpty() == true) {
                     break;
@@ -88,7 +88,7 @@ public class Simulator {
                         server.makeWait(customer);
                         //logs waiting customer
                         System.out.println(customer);
-                        Double waitingTime = server.adjustWaitingTime(customer);
+                        double waitingTime = server.adjustWaitingTime(customer);
                         server.serveFuture(customer);
                         numberServed += 1;
                         totalWaitingTime += waitingTime;
@@ -118,16 +118,16 @@ public class Simulator {
     }
     
     /**
-     * This method returns the average waiting time of
+     * Returns the average waiting time of
      * all the customers in the queue.
      * @return  average waiting time
      */
-    public Double averageWaitingTime() {
+    public double averageWaitingTime() {
         return totalWaitingTime / numberServed;
     }
     
     /**
-     * This method returns the total number of served
+     * Returns the total number of served
      * customers in the queue.
      * @return  total served customers
      */
@@ -136,7 +136,7 @@ public class Simulator {
     }
     
     /**
-     * This method returns the total number of customers
+     * Returns the total number of customers
      * who left the queue.
      * @return  total left customers
      */
@@ -145,7 +145,7 @@ public class Simulator {
     }
     
     /**
-     * This method returns the number of servers in the
+     * Returns the number of servers in the
      * array of servers.
      * @return  number of servers
      */
