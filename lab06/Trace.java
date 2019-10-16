@@ -12,7 +12,7 @@ class Trace<T> {
         this.history = history;
         this.object = object;
     }
-    
+
     @SafeVarargs
     public static <T> Trace<T> of(T... objects) {
         T objectInitial = objects[0];
@@ -48,7 +48,7 @@ class Trace<T> {
         }
         return new Trace<T>(objectBack, historyBack);
     }
-    
+
     @SuppressWarnings("unchecked")
     public <R> Trace<R> map(Function<? super T, ? extends R> function) {
         R objectNew = function.apply(this.get());
