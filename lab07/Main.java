@@ -2,6 +2,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Scanner;
 import java.util.stream.Stream;
+import java.util.Optional;
 
 /**
  * The LabOFourA class is the entry point into Lab 4a.
@@ -20,11 +21,11 @@ class Main {
      *     being the arrival time of a customer (in any order).
      */
     public static void main(String[] args) {
-        Scanner scanner = createScanner(args);
-        if (scanner == null) {
+        Optional<Scanner> optScanner = createScanner(args);
+        if (optScanner.isEmpty()) {
             return;
         }
-        SimState state = initSimState(scanner);
+        SimState state = initSimState(optScanner.get());
         System.out.println(state.run());
     }
 
@@ -61,24 +62,23 @@ class Main {
      * @return A scanner or {@code null} if a filename is provided but the file
      *     cannot be open.
      */
-    private static Scanner createScanner(String[] args) {
-        Scanner scanner = null;
-
+    private static Optional<Scanner> createScanner(String[] args) {
+        Optional<Scanner> optScanner = Optional.empty();
         try {
             // Read from stdin if no filename is given, otherwise read from the
             // given file.
             if (args.length == 0) {
                 // If there is no argument, read from standard input.
-                scanner = new Scanner(System.in);
+                optScanner = Optional.of(new Scanner(System.in));
             } else {
                 // Else read from file
                 FileReader fileReader = new FileReader(args[0]);
-                scanner = new Scanner(fileReader);
+                optScanner = Optional.of(new Scanner(fileReader));
             }
         } catch (FileNotFoundException exception) {
             System.err.println("Unable to open file " + args[0] + " "
                     + exception);
         }
-        return scanner;
+        return optScanner;
     }
 }
