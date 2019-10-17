@@ -38,19 +38,13 @@ class Main {
         // Read the first line of input as number of servers in the shop
         int numOfServers = scanner.nextInt();
         SimState state = new SimState(numOfServers);
-        if (scanner.hasNextDouble()) {
-            return addArrival(scanner, state);
-        }
-        return state;
-    }
-
-    public static SimState addArrival(Scanner scanner, SimState state) {
-        double arrivalTime = scanner.nextDouble();
-        state = state.addEvent(arrivalTime, x -> x.simulateArrival(arrivalTime));
-        if (scanner.hasNextDouble()) {
-            return addArrival(scanner, state);
-        }
-        return state;
+        SimState newState = Stream
+           .iterate(scanner.hasNextDouble()? scanner.nextDouble(): -1, x -> x >= 0, 
+                   y -> scanner.hasNextDouble()? scanner.nextDouble() : -1) 
+           .<SimState>reduce(state, (currentState, arrivalTime) -> currentState.addEvent(
+                       arrivalTime, currState -> currState.simulateArrival(arrivalTime)), 
+                       (pseudoState, pseudo2State) -> pseudoState);
+        return newState;
     }
 
     /**
