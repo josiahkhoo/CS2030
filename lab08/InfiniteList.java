@@ -1,4 +1,4 @@
-// package cs2030.mystream;
+package cs2030.mystream;
 
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
@@ -33,6 +33,8 @@ public interface InfiniteList<T> {
     public Optional<T> reduce (BinaryOperator<T> accumulator);
 
     public <U> U reduce (U identity, BiFunction<U, ? super T, U> accumulator);
-//    public InfiniteList<T> takeWhile(Predicate<? super T> predicate);
 
+    public InfiniteList<T> takeWhile(Predicate<? super T> predicate);
+    
+    public boolean isEmptyList();
 }

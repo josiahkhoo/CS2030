@@ -1,3 +1,5 @@
+package cs2030.mystream;
+
 import java.util.Optional;
 
 public class EmptyList<T> extends InfiniteListImpl<T> {
