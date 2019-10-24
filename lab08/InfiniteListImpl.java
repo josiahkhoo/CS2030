@@ -4,7 +4,7 @@ import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier; 
+import java.util.function.Supplier;
 import java.util.function.Consumer;
 import java.util.Optional;
 import java.util.List;
@@ -12,65 +12,60 @@ import java.util.ArrayList;
 
 public class InfiniteListImpl<T> implements InfiniteList<T> {
 
-    private final Supplier<Optional<T>> head;
+    private final CachedSupplier<Optional<T>> head;
     private final Supplier<InfiniteListImpl<T>> tail;
 
     protected InfiniteListImpl(Supplier<Optional<T>> head, Supplier<InfiniteListImpl<T>> tail) {
+        this.head = new CachedSupplier<Optional<T>>(head);
+        this.tail = tail;
+    }
+
+    protected InfiniteListImpl(CachedSupplier<Optional<T>> head, Supplier<InfiniteListImpl<T>> tail) {
         this.head = head;
         this.tail = tail;
     }
 
     public static <T> InfiniteListImpl<T> generate(Supplier<? extends T> s) {
-        System.out.println("generate");
-        return new InfiniteListImpl<T>(() -> Optional.of(s.get()), 
+        return new InfiniteListImpl<T>(
+                () -> Optional.of(s.get()), 
                 () -> InfiniteListImpl.generate(s));
     }
 
     public static <T> InfiniteListImpl<T> iterate(T seed, Function<? super T, ? extends T> next) {
-        System.out.println("iterate");
-        return new InfiniteListImpl<T>(() -> Optional.of(seed), 
+        return new InfiniteListImpl<T>(
+                () -> Optional.of(seed), 
                 () -> InfiniteListImpl.iterate(next.apply(seed), next));
     }
 
     public <R> InfiniteListImpl<R> map(Function<? super T, ? extends R> mapper) {
-        System.out.println("map");
-        return new InfiniteListImpl<R>(() -> head.get().map(mapper),
-                () -> {
-                    if (tail.get() instanceof EmptyList) {
-                        return new EmptyList<>();
-                    } else {
-                        return tail.get().map(mapper);
-                    }
-        });
+        if (this.isEmptyList()) {
+            return new EmptyList<R>();
+        }
+        return new InfiniteListImpl<R>(
+                () -> head.get().map(mapper),
+                () -> tail.get().map(mapper));
     }
 
     public InfiniteListImpl<T> filter(Predicate<? super T> predicate) {
-        System.out.println("filter");
-        return new InfiniteListImpl<T>(() -> head.get().filter(predicate),
-                () -> {
-                    if (tail.get() instanceof EmptyList) {
-                        return new EmptyList<>();
-                    } else {
-                        return tail.get().filter(predicate);
-                    }
-        });
+        if (this.isEmptyList()) {
+            return new EmptyList<T>();
+        }
+        return new InfiniteListImpl<T>(
+                () -> head.get().filter(predicate),
+                () -> tail.get().filter(predicate));
     }
 
     public void forEach(Consumer<? super T> action) {
-        System.out.println("forEach");
-        Optional<T> currHead = head.get();
-        InfiniteListImpl<T> currTail = tail.get();
-        while (true) {
-            if (currHead.isPresent()) {
-                T curr = currHead.get();
-                action.accept(curr);
-            }
-            if (currTail.isEmptyList()) {
-                break;
-            }
-            currHead = currTail.head.get();
-            currTail = currTail.tail.get();
+        if (this.isEmptyList()) {
+            return;
         }
+        Optional<T> currHead = head.get();
+        if (currHead.isPresent()) {
+            T curr = currHead.get();
+            action.accept(curr);
+        }
+        InfiniteListImpl<T> currTail = tail.get();
+        currTail.forEach(action);
         return;
     }
 
@@ -81,50 +76,35 @@ public class InfiniteListImpl<T> implements InfiniteList<T> {
     }
 
     public InfiniteListImpl<T> limit(long n) {
-        System.out.println("limit");
-        Optional<T> currHead = head.get();
-        InfiniteListImpl<T> currTail = tail.get();
-        if (currTail.isEmptyList()) {
-            if (currHead.isEmpty()) {
-                return new EmptyList<T>();
-            }
-            Optional<T> newHead = currHead;
-            return new InfiniteListImpl<T>(() -> newHead,
-                    () -> new EmptyList<T>());
-        }
-        if (n > 1 && currHead.isPresent()) {
-            Optional<T> newHead = currHead;
-            InfiniteListImpl<T> newTail = currTail;
-            System.out.println(newHead.get());
-            return new InfiniteListImpl<T>(() -> newHead,
-                    () -> newTail.limit(n-1));
-        } else if (currHead.isEmpty()) {
-            Optional<T> newHead = currHead;
-            InfiniteListImpl<T> newTail = currTail;
-            return newTail.limit(n);
-        } else if (n == 1) {
-            Optional<T> newHead = currHead;
-            return new InfiniteListImpl<T>(() -> newHead,
-                    () -> new EmptyList<T>());
-        } else {
+        if (this.isEmptyList() || (n <= 0)) {
             return new EmptyList<T>();
+        }
+        else  {
+            return new InfiniteListImpl<T>(
+                    head,
+                    () -> { 
+                        if (head.get().isPresent()) {
+                            if (n == 1) {
+                                return new EmptyList<T>();
+                            }
+                            return tail.get().limit(n - 1);
+                        } else {
+                            return tail.get().limit(n);
+                        }});
         }
     }
 
     public long count() {
         long count = 0;
         Optional<T> currHead = head.get();
-        InfiniteListImpl<T> currTail = tail.get();
-        while (true) {
-            if (currHead.isPresent()) {
-                count += 1;
-            }
-            if (currTail.isEmptyList()) {
-                break;
-            }
-            currHead = currTail.head.get();
-            currTail = currTail.tail.get();
+        if (currHead.isPresent()) {
+            count += 1;
         }
+        InfiniteListImpl<T> currTail = tail.get();
+        if (currTail.isEmptyList()) {
+            return count;
+        }
+        count += currTail.count();
         return count;
     }
 
@@ -167,52 +147,32 @@ public class InfiniteListImpl<T> implements InfiniteList<T> {
     }
 
     public InfiniteListImpl<T> takeWhile(Predicate<? super T> predicate) {
-        System.out.println("takeWhile");
-        Optional<T> currHead = head.get();
-        InfiniteListImpl<T> currTail = tail.get();
-        if (currTail.isEmptyList()) {
-            if (currHead.isEmpty()) {
-                return new EmptyList<T>();
-            }
-            Optional<T> newHead = currHead;
-            return new InfiniteListImpl<T>(() -> newHead,
-                    () -> new EmptyList<T>());
+        if (this.isEmptyList()) {
+            return new EmptyList<T>();
         }
-        if (currHead.isPresent()) {
-            if (predicate.test(currHead.get())) {
-                Optional<T> newHead = currHead;
-                InfiniteListImpl<T> newTail = currTail;
-                return new InfiniteListImpl<T>(() -> newHead,
-                        () -> newTail.takeWhile(predicate));
-            }
-            else {
-                return new EmptyList<T>();
-            }
-        } else {
-            Optional<T> newHead = currHead;
-            InfiniteListImpl<T> newTail = currTail;
-            return new InfiniteListImpl<T>(() -> newHead,
-                    () -> newTail.takeWhile(predicate));
-        }
+        CachedSupplier<Boolean> predicateTest = new CachedSupplier<>(() -> predicate.test(head.get().get()));
+        return new InfiniteListImpl<T>(
+                () -> {
+                    if (head.get().isPresent()) {
+                        if (predicateTest.get()) {
+                            return head.get();
+                        }
+                    }
+                    return Optional.empty();
+                    },
+                () -> {
+                    if (head.get().isPresent()) {
+                        if (predicateTest.get()) {
+                            return tail.get().takeWhile(predicate);
+                        } else {
+                            return new EmptyList<T>();
+                        }
+                    } else {
+                        return tail.get().takeWhile(predicate);
+                    }
+                });
     }
 
-//        if (n > 1 && currHead.isPresent()) {
-//            Optional<T> newHead = currHead;
-//            InfiniteListImpl<T> newTail = currTail;
-//            return new InfiniteListImpl<T>(() -> newHead,
-//                    () -> newTail.limit(n-1));
-//        } else if (currHead.isEmpty()) {
-//            Optional<T> newHead = currHead;
-//            InfiniteListImpl<T> newTail = currTail;
-//            return new InfiniteListImpl<T>(() -> newHead,
-//                    () -> newTail.limit(n));
-//        } else if (n == 1) {
-//            Optional<T> newHead = currHead;
-//            return new InfiniteListImpl<T>(() -> newHead,
-//                    () -> new EmptyList<T>());
-//        } else {
-//            return new EmptyList<T>();
-//        }
     public InfiniteListImpl<T> get() {
         if (this.head.get().isEmpty()) {
             return this.tail.get();
