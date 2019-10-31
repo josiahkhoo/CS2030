@@ -54,19 +54,24 @@ class MatrixMultiplication extends RecursiveTask<Matrix> {
 
     @Override
     public Matrix compute() {
-        
+
         if (dimension <= 2) {
             return Matrix.nonRecursiveMultiply(m1, m2, m1Row, m1Col, m2Row, m2Col, dimension);
         }
 
         int size = dimension / 2;
         Matrix result = new Matrix(dimension);
-        Matrix a11b11 = new MatrixMultiplication(m1, m2, m1Row, m1Col, m2Row,
-                m2Col, size).compute();
+        MatrixMultiplication a11b11Mul = new MatrixMultiplication(m1, m2, m1Row, m1Col, m2Row,
+                m2Col, size);
         MatrixMultiplication a12b21Mul = new MatrixMultiplication(m1, m2, m1Row, m1Col + size,
                 m2Row + size, m2Col, size);
+
+        a11b11Mul.fork();
         a12b21Mul.fork();
+        
         Matrix a12b21 = a12b21Mul.join();
+        Matrix a11b11 = a11b11Mul.join();
+
         for (int i = 0; i < size; i++) {
             double[] m1m = a11b11.m[i];
             double[] m2m = a12b21.m[i];
@@ -76,12 +81,17 @@ class MatrixMultiplication extends RecursiveTask<Matrix> {
             }
         }
 
-        Matrix a11b12 = new MatrixMultiplication(m1, m2, m1Row, m1Col, m2Row,
-                m2Col + size, size).compute();
+        MatrixMultiplication a11b12Mul = new MatrixMultiplication(m1, m2, m1Row, m1Col, m2Row,
+                m2Col + size, size);
         MatrixMultiplication a12b22Mul = new MatrixMultiplication(m1, m2, m1Row, m1Col + size,
                 m2Row + size, m2Col + size, size);
+
+        a11b12Mul.fork();
         a12b22Mul.fork();
+
         Matrix a12b22 = a12b22Mul.join();
+        Matrix a11b12 = a11b12Mul.join();
+
         for (int i = 0; i < size; i++) {
             double[] m1m = a11b12.m[i];
             double[] m2m = a12b22.m[i];
@@ -91,12 +101,17 @@ class MatrixMultiplication extends RecursiveTask<Matrix> {
             }
         }
 
-        Matrix a21b11 = new MatrixMultiplication(m1, m2, m1Row + size, m1Col,
-                m2Row, m2Col, size).compute();
+        MatrixMultiplication a21b11Mul = new MatrixMultiplication(m1, m2, m1Row + size, m1Col,
+                m2Row, m2Col, size);
         MatrixMultiplication a22b21Mul = new MatrixMultiplication(m1, m2, m1Row + size, m1Col + size,
                 m2Row + size, m2Col, size);
+
+        a21b11Mul.fork();
         a22b21Mul.fork();
+
         Matrix a22b21 = a22b21Mul.join();
+        Matrix a21b11 = a21b11Mul.join();
+
         for (int i = 0; i < size; i++) {
             double[] m1m = a21b11.m[i];
             double[] m2m = a22b21.m[i];
@@ -106,12 +121,17 @@ class MatrixMultiplication extends RecursiveTask<Matrix> {
             }
         }
 
-        Matrix a21b12 = new MatrixMultiplication(m1, m2, m1Row + size, m1Col,
-                m2Row, m2Col + size, size).compute();
+        MatrixMultiplication a21b12Mul = new MatrixMultiplication(m1, m2, m1Row + size, m1Col,
+                m2Row, m2Col + size, size);
         MatrixMultiplication a22b22Mul = new MatrixMultiplication(m1, m2, m1Row + size, m1Col + size,
                 m2Row + size, m2Col + size, size);
+
+        a21b12Mul.fork();
         a22b22Mul.fork();
+
         Matrix a22b22 = a22b22Mul.join();
+        Matrix a21b12 = a21b12Mul.join();
+
         for (int i = 0; i < size; i++) {
             double[] m1m = a21b12.m[i];
             double[] m2m = a22b22.m[i];
@@ -120,6 +140,7 @@ class MatrixMultiplication extends RecursiveTask<Matrix> {
                 r1m[j + size] = m1m[j] + m2m[j];
             }
         }
+
         return result;
     }
 }
