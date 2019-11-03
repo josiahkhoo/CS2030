@@ -1,3 +1,5 @@
+package cs2030.simulator;
+
 /**
  * This class stores stats about the simulation.
  * In particular, the average waiting time, the number of customers

@@ -1,3 +1,5 @@
+package cs2030.simulator;
+
 /**
  * The Customer class encapsulates information and methods pertaining to a
  * Customer in a simulation.  In Lab 4, we simplfied the class to maintaining

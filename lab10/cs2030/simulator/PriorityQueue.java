@@ -1,3 +1,5 @@
+package cs2030.simulator;
+
 /**
  * This class wraps around the class PriorityQueue from Java
  * Collection Framework.  It provides an alternative API 

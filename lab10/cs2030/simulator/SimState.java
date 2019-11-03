@@ -1,3 +1,5 @@
+package cs2030.simulator;
+
 /**
  * This class encapsulates all the simulation states.  There are four main
  * components: (i) the event queue, (ii) the statistics, (iii) the shop
@@ -17,14 +19,27 @@ public class SimState {
   /** The shop of servers. */
   private final Shop shop;
 
+  /** The number of customers. */
+  private final int numOfCustomers;
+
+  /** The probability of resting. */
+  private final double restingProbability;
+
+  /** The random number generator. */
+  private RngGen rng;
+
   /**
    * Constructor for creating the simulation state from scratch.
    * @param numOfServers The number of servers.
+   * @param rng The random number generator.
    */
-  public SimState(int numOfServers) {
-    this.shop = new Shop(numOfServers);
+  public SimState(int numOfServers, int maxQueueLength, int numOfCustomers, double restingProbability, RngGen rng) {
+    this.shop = new Shop(numOfServers, maxQueueLength);
     this.stats = new Statistics();
     this.events = new PriorityQueue<Event>();
+    this.numOfCustomers = numOfCustomers;
+    this.restingProbability = restingProbability;
+    this.rng = rng;
   }
 
   /**
@@ -167,6 +182,16 @@ public class SimState {
     return this;
   }
 
+  public SimState simulateServerRest(double time, Server server) {
+    server.makeRest(time);
+    return this;
+  }
+
+  public SimState simulateServerBack(Server server) {
+    server.makeBack();
+    return this;
+  } 
+
   /**
    * Handle the logic of server serving customer.  A new done event
    * is generated and scheduled.
@@ -176,11 +201,23 @@ public class SimState {
    * @return A new state of the simulation.
    */
   private SimState serveCustomer(double time, Server server, Customer customer) {
-    double doneTime = time + Simulation.SERVICE_TIME;
+    double doneTime = time + rng.genServiceTime();
     server.serve(customer);
+    if (server.isResting()) {
+      time += server.getDoneRestingTime();
+    }
     noteServed(time, server, customer);
     addEvent(new DoneEvent(doneTime, server, customer));
+    double restTime = rng.genRestPeriod();
+    if (serverRests()) {
+      addEvent(new SERVER_REST(doneTime, server, restTime));
+      addEvent(new SERVER_BACK(doneTime + restTime, server));
+    }
     return this;
+  }
+
+  private boolean serverRests() {
+    return (rng.genRandomRest() < restingProbability);
   }
 
   /**
@@ -195,6 +232,21 @@ public class SimState {
       p = p.first.simulate(p.second).nextEvent();
     }
     return p.second;
+  }
+
+  public SimState populate() {
+    boolean firstCustomer = true;
+    double arrivalTime = 0; 
+    for (int i = 0; i < numOfCustomers; i++) {
+      if (firstCustomer) {
+          firstCustomer = false;
+          this.addEvent(new ArrivalEvent(arrivalTime));
+          continue;
+      }
+      arrivalTime += rng.genInterArrivalTime();
+      this.addEvent(new ArrivalEvent(arrivalTime));
+    }
+    return this;
   }
 
   /**

@@ -1,3 +1,5 @@
+package cs2030.simulator;
+
 /**
  * This utility class stores two items together in a pair.
  * It could be used, for instance, to faciliate returning of

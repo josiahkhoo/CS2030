@@ -1,3 +1,5 @@
+package cs2030.simulator;
+
 /**
  * The Event class encapsulates information and methods pertaining to a
  * Simulator event.  This is an abstract class that should be subclassed

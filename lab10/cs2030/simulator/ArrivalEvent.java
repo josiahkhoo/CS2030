@@ -1,3 +1,5 @@
+package cs2030.simulator;
+
 /**
  * Encapsulates information and methods pertaining to an arrival event.
  * This class does not do much for now, except letting the simulator call

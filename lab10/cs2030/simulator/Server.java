@@ -1,3 +1,8 @@
+package cs2030.simulator;
+
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Optional;
 /**
  * The Server class keeps track of who is the customer being served (if any)
  * and who is the customer waiting to be served (if any).
@@ -13,19 +18,29 @@ class Server {
   /** The unique ID of this server. */
   private final int id;
 
+  /** The queue capacity of this server. */
+  private final int queueCapacity;
+
   /** The customer currently being served, if any. */
   private Customer currentCustomer;
 
   /** The customer currently waiting, if any. */
-  private Customer waitingCustomer;
+  private Queue<Customer> waitingCustomerQueue;
+
+  private boolean resting;
+
+  private Optional<Double> doneRestingTime;
 
   /**
    * Creates a server and initalizes it with a unique id.
    */
-  public Server() {
+  public Server(int queueCapacity) {
     this.currentCustomer = null;
-    this.waitingCustomer = null;
+    this.waitingCustomerQueue = new LinkedList<Customer>();
     this.id = Server.lastServerId;
+    this.queueCapacity = queueCapacity;
+    this.resting = false;
+    this.doneRestingTime = Optional.empty();
     Server.lastServerId++;
   }
 
@@ -51,7 +66,7 @@ class Server {
    * @return true if a customer is waiting for given server; false otherwise.
    */
   public boolean hasWaitingCustomer() {
-    return this.waitingCustomer != null;
+    return (this.waitingCustomerQueue.size() >= queueCapacity);
   }
 
   /**
@@ -59,7 +74,7 @@ class Server {
    * @return customer waiting for given server.
    */
   public Customer getWaitingCustomer() {
-    return this.waitingCustomer;
+    return this.waitingCustomerQueue.peek();
   }
 
   /**
@@ -69,8 +84,8 @@ class Server {
    */
   public Server serve(Customer customer) {
     this.currentCustomer = customer;
-    if (customer.equals(this.waitingCustomer)) {
-      this.waitingCustomer = null;
+    if (customer.equals(this.waitingCustomerQueue.peek())) {
+      this.waitingCustomerQueue.poll(); 
     }
     return this;
   }
@@ -81,8 +96,28 @@ class Server {
    * @return The new server with a waiting customer.
    */
   public Server askToWait(Customer customer) {
-    this.waitingCustomer = customer;
+    this.waitingCustomerQueue.add(customer);
     return this;
+  }
+
+  public boolean isResting() {
+    return this.resting;
+  }
+
+  public Server makeRest(double doneRestingTime) {
+    this.resting = true;
+    this.doneRestingTime = Optional.of(doneRestingTime);
+    return this;
+  }
+
+  public Server makeBack() {
+    this.resting = false;
+    this.doneRestingTime = Optional.empty();
+    return this;
+  }
+
+  public double getDoneRestingTime() {
+    return this.doneRestingTime.get();
   }
 
   /**

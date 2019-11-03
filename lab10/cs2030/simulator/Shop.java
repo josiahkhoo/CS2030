@@ -1,3 +1,5 @@
+package cs2030.simulator;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,10 +19,10 @@ class Shop {
    * Create a new shop with a given number of servers.
    * @param numOfServers The number of servers.
    */
-  Shop(int numOfServers) {
+  Shop(int numOfServers, int maxQueueLength) {
     this.servers = new ArrayList<>(numOfServers);
     for (int i = 0; i < numOfServers; i++) {
-      this.servers.add(new Server());
+      this.servers.add(new Server(maxQueueLength));
     }
   }
 

@@ -1,3 +1,5 @@
+package cs2030.simulator;
+
 /**
  * Encapsulates information and methods pertaining to a "done" event,
  * which is when a server finishes serving a customer.
