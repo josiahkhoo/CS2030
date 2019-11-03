@@ -3,7 +3,7 @@ import java.util.concurrent.RecursiveTask;
 class MatrixMultiplication extends RecursiveTask<Matrix> {
 
     /** The fork threshold. */
-    private static final int FORK_THRESHOLD = 128;
+    private static final int FORK_THRESHOLD = 512;
 
     /** The first matrix to multiply with. */
     private Matrix m1;
@@ -55,7 +55,7 @@ class MatrixMultiplication extends RecursiveTask<Matrix> {
     @Override
     public Matrix compute() {
 
-        if (dimension <= 2) {
+        if (dimension <= FORK_THRESHOLD) {
             return Matrix.nonRecursiveMultiply(m1, m2, m1Row, m1Col, m2Row, m2Col, dimension);
         }
 
