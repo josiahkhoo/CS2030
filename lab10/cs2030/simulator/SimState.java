@@ -203,9 +203,6 @@ public class SimState {
   private SimState serveCustomer(double time, Server server, Customer customer) {
     double doneTime = time + rng.genServiceTime();
     server.serve(customer);
-    if (server.isResting()) {
-      time += server.getDoneRestingTime();
-    }
     noteServed(time, server, customer);
     addEvent(new DoneEvent(doneTime, server, customer));
     double restTime = rng.genRestPeriod();

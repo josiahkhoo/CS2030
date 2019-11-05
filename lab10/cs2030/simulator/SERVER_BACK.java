@@ -7,6 +7,7 @@ public class SERVER_BACK extends Event {
     SERVER_BACK(double time, Server server) {
         super(time);
         this.server = server;
+        System.out.println("BACK");
     }
 
     public SimState simulate(SimState sim) {

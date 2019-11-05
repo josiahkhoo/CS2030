@@ -10,6 +10,9 @@ public class SERVER_REST extends Event {
         super(time);
         this.server = server;
         this.restTime = restTime;
+        System.out.println("WAITING");
+        System.out.println(server);
+        System.out.println(time);
     }
 
     public SimState simulate(SimState sim) {
