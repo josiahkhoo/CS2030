@@ -3,7 +3,7 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-class LazyList<T> {
+class LazyList<T extends Comparable<T>> {
 
     List<Lazy<T>> list;
 
@@ -11,9 +11,9 @@ class LazyList<T> {
         this.list = list;
     }
 
-    static <T> LazyList <T> generate(int n, T seed, UnaryOperator<T> f) {
+    static <T extends Comparable<T>> LazyList<T> generate(int n, T seed, UnaryOperator<T> f) {
         return new LazyList<T>(
-                Stream.iterate(seed, x -> Lazy.of(() -> f.apply(x)))
+                Stream.iterate(Lazy.of(seed), x -> x.map(f))
                 .limit(n)
                 .collect(Collectors.toList())
                 );
@@ -24,6 +24,9 @@ class LazyList<T> {
     }
 
     public int indexOf(T v) {
-        return this.list.indexOf(v);
+        return this.list.indexOf(list.stream()
+                .filter(x -> x.get() == v ? true : false)
+                .findFirst()
+                .get());
     }
 }
