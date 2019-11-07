@@ -6,17 +6,19 @@ public class SERVER_REST extends Event {
 
     private final double restTime;
 
-    SERVER_REST(double time, Server server, double restTime) {
+    private final Customer customer;
+
+    SERVER_REST(double time, Server server, double restTime, Customer customer) {
         super(time);
         this.server = server;
         this.restTime = restTime;
-        System.out.println("WAITING");
-        System.out.println(server);
-        System.out.println(time);
+        this.customer = customer;
+        System.out.printf("CREATED: %s REST AT: %.3f\n", server, time);
     }
 
     public SimState simulate(SimState sim) {
-        sim.simulateServerRest(time + restTime, server);
+        System.out.printf("SIMULATED: %s REST AT: %.3f\n", server, time);
+        sim.simulateServerRest(time, restTime, server, customer);
         return sim;
     }
 

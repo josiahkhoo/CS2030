@@ -126,7 +126,7 @@ class Server {
    *     waiting customer.
    */
   public String toString() {
-    return Integer.toString(this.id); 
+    return String.format("server %d", this.id); 
   }
 
   /**

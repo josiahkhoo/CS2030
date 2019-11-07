@@ -33,7 +33,7 @@ class Shop {
    */
   public Server findIdleServer() {
     for (Server server: this.servers) {
-      if (server.isIdle()) {
+      if (server.isIdle() && !(server.isResting())) {
         return server;
       }
     }
