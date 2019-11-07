@@ -2,8 +2,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Scanner;
 import cs2030.simulator.SimState;
-import cs2030.simulator.RngGen;
-import cs2030.simulator.ArrivalEvent;
 
 /**
  * The LabOFourA class is the entry point into Lab 4a.
@@ -47,8 +45,7 @@ class Main {
         double serviceRate = scanner.nextDouble();
         double restingRate = scanner.nextDouble();
         double restingProbability = scanner.nextDouble();
-        RngGen rng = new RngGen(seed, arrivalRate, serviceRate, restingRate);
-        SimState state = new SimState(numOfServers, maxQueueLength, numOfCustomers, restingProbability, rng);
+        SimState state = new SimState(numOfServers, maxQueueLength, numOfCustomers, restingProbability, seed, arrivalRate, serviceRate, restingRate);
         return state;
     }
 

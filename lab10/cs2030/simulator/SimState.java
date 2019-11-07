@@ -26,20 +26,20 @@ public class SimState {
   private final double restingProbability;
 
   /** The random number generator. */
-  private RngGen rng;
+  private RandomGenerator rng;
 
   /**
    * Constructor for creating the simulation state from scratch.
    * @param numOfServers The number of servers.
    * @param rng The random number generator.
    */
-  public SimState(int numOfServers, int maxQueueLength, int numOfCustomers, double restingProbability, RngGen rng) {
+  public SimState(int numOfServers, int maxQueueLength, int numOfCustomers, double restingProbability, int seed, double arrivalRate, double serviceRate, double serviceTime) {
     this.shop = new Shop(numOfServers, maxQueueLength);
     this.stats = new Statistics();
     this.events = new PriorityQueue<Event>();
     this.numOfCustomers = numOfCustomers;
     this.restingProbability = restingProbability;
-    this.rng = rng;
+    this.rng = new RandomGenerator(seed, arrivalRate, serviceRate, serviceTime);
   }
 
   /**
