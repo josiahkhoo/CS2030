@@ -39,13 +39,15 @@ class Main {
         // Read the first line of input as number of servers in the shop
         int seed = scanner.nextInt();
         int numOfServers = scanner.nextInt();
+        int numOfSelfCheckout = scanner.nextInt();
         int maxQueueLength = scanner.nextInt();
         int numOfCustomers = scanner.nextInt();
         double arrivalRate = scanner.nextDouble();
         double serviceRate = scanner.nextDouble();
         double restingRate = scanner.nextDouble();
         double restingProbability = scanner.nextDouble();
-        SimState state = new SimState(numOfServers, maxQueueLength, numOfCustomers, restingProbability, seed, arrivalRate, serviceRate, restingRate);
+        double greedyProbability = scanner.nextDouble();
+        SimState state = new SimState(numOfServers, maxQueueLength, numOfSelfCheckout, numOfCustomers, restingProbability, seed, arrivalRate, serviceRate, restingRate, greedyProbability);
         return state;
     }
 

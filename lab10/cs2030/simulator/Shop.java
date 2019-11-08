@@ -2,6 +2,8 @@ package cs2030.simulator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * A shop object maintains the list of servers and support queries
@@ -19,10 +21,14 @@ class Shop {
    * Create a new shop with a given number of servers.
    * @param numOfServers The number of servers.
    */
-  Shop(int numOfServers, int maxQueueLength) {
+  Shop(int numOfServers, int numOfSelfCheckout, int maxQueueLength) {
     this.servers = new ArrayList<>(numOfServers);
+    Queue<Customer> selfCheckoutQueue = new LinkedList<Customer>();
     for (int i = 0; i < numOfServers; i++) {
       this.servers.add(new Server(maxQueueLength));
+    }
+    for (int i = 0; i < numOfSelfCheckout; i++) {
+      this.servers.add(new SelfCheckout(maxQueueLength, selfCheckoutQueue));
     }
   }
 
@@ -52,6 +58,23 @@ class Shop {
       }
     }
     return null;
+  }
+
+  public Server findServerWithShortestQueue() {
+    Server shortestQueueServer = null;
+    boolean firstServer = true;
+    for (Server server: this.servers) {
+      if (!server.hasWaitingCustomer()) {
+        if (firstServer == true) {
+          shortestQueueServer = server;
+          firstServer = false;
+        }
+        if (server.waitingQueueSize() < shortestQueueServer.waitingQueueSize()) {
+          shortestQueueServer = server;
+        }
+      }
+    }
+    return shortestQueueServer;
   }
 
   /**

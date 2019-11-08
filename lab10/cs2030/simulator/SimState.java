@@ -25,6 +25,9 @@ public class SimState {
   /** The probability of resting. */
   private final double restingProbability;
 
+  /** The probability of a greedy customer. */
+  private final double greedyProbability;
+
   /** The random number generator. */
   private RandomGenerator rng;
 
@@ -33,12 +36,13 @@ public class SimState {
    * @param numOfServers The number of servers.
    * @param rng The random number generator.
    */
-  public SimState(int numOfServers, int maxQueueLength, int numOfCustomers, double restingProbability, int seed, double arrivalRate, double serviceRate, double serviceTime) {
-    this.shop = new Shop(numOfServers, maxQueueLength);
+  public SimState(int numOfServers, int maxQueueLength, int numOfSelfCheckout, int numOfCustomers, double restingProbability, int seed, double arrivalRate, double serviceRate, double serviceTime, double greedyProbability) {
+    this.shop = new Shop(numOfServers, numOfSelfCheckout, maxQueueLength);
     this.stats = new Statistics();
     this.events = new PriorityQueue<Event>();
     this.numOfCustomers = numOfCustomers;
     this.restingProbability = restingProbability;
+    this.greedyProbability = greedyProbability;
     this.rng = new RandomGenerator(seed, arrivalRate, serviceRate, serviceTime);
   }
 
@@ -133,7 +137,12 @@ public class SimState {
    * @return A new state of the simulation.
    */
   public SimState simulateArrival(double time) {
-    Customer customer = new Customer(time);
+    Customer customer = null;
+    if (customerIsGreedy()) {
+      customer = new GreedyCustomer(time);
+    } else {
+      customer = new Customer(time);
+    }
     noteArrival(time, customer);
     processArrival(time, customer);
     return this;
@@ -153,7 +162,11 @@ public class SimState {
       serveCustomer(time, s, customer);
       return this;
     }
-    s = shop.findServerWithNoWaitingCustomer();
+    if (customer instanceof GreedyCustomer) {
+      s = shop.findServerWithShortestQueue();
+    } else {
+      s = shop.findServerWithNoWaitingCustomer();
+    }
     if (s != null) {
       noteWait(time, s, customer);
       s.askToWait(customer);
@@ -174,14 +187,14 @@ public class SimState {
   public SimState simulateDone(double time, Server server, Customer customer) {
     noteDone(time, server, customer);
     Customer c = server.getWaitingCustomer();
-    if (serverRests()) {
+    if (!(server instanceof SelfCheckout) && serverRests()) {
       double restTime = rng.genRestPeriod();
       addEvent(new SERVER_REST(time, server, restTime, customer));
       addEvent(new SERVER_BACK(time + restTime, server));
     } else if (c != null) {
         serveCustomer(time, server, c);
         return this;
-      }
+    }
     server.makeIdle();
     return this;
   }
@@ -220,6 +233,10 @@ public class SimState {
 
   private boolean serverRests() {
     return (rng.genRandomRest() < restingProbability);
+  }
+
+  private boolean customerIsGreedy() {
+    return (rng.genCustomerType() < greedyProbability);
   }
 
   /**

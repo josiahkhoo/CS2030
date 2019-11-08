@@ -13,11 +13,9 @@ public class SERVER_REST extends Event {
         this.server = server;
         this.restTime = restTime;
         this.customer = customer;
-        System.out.printf("CREATED: %s REST AT: %.3f\n", server, time);
     }
 
     public SimState simulate(SimState sim) {
-        System.out.printf("SIMULATED: %s REST AT: %.3f\n", server, time);
         sim.simulateServerRest(time, restTime, server, customer);
         return sim;
     }

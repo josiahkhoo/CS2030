@@ -16,7 +16,7 @@ class Server {
   private static int lastServerId = 1;
 
   /** The unique ID of this server. */
-  private final int id;
+  protected final int id;
 
   /** The queue capacity of this server. */
   private final int queueCapacity;
@@ -25,7 +25,7 @@ class Server {
   private Customer currentCustomer;
 
   /** The customer currently waiting, if any. */
-  private Queue<Customer> waitingCustomerQueue;
+  protected Queue<Customer> waitingCustomerQueue;
 
   private boolean resting;
 
@@ -61,12 +61,16 @@ class Server {
     return this.currentCustomer == null;
   }
 
+  public int waitingQueueSize() {
+    return this.waitingCustomerQueue.size();
+  }
+
   /**
    * Checks if there is a customer waiting for given server.
    * @return true if a customer is waiting for given server; false otherwise.
    */
   public boolean hasWaitingCustomer() {
-    return (this.waitingCustomerQueue.size() >= queueCapacity);
+    return (waitingQueueSize() >= queueCapacity);
   }
 
   /**
