@@ -24,9 +24,6 @@ class LazyList<T extends Comparable<T>> {
     }
 
     public int indexOf(T v) {
-        return this.list.indexOf(list.stream()
-                .filter(x -> x.get() == v ? true : false)
-                .findFirst()
-                .get());
+        return this.list.indexOf(Lazy.of(v));
     }
 }

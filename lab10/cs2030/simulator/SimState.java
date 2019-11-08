@@ -174,16 +174,19 @@ public class SimState {
   public SimState simulateDone(double time, Server server, Customer customer) {
     noteDone(time, server, customer);
     Customer c = server.getWaitingCustomer();
-    if (c != null) {
-      serveCustomer(time, server, c);
-      return this;
-    }
+    if (serverRests()) {
+      double restTime = rng.genRestPeriod();
+      addEvent(new SERVER_REST(time, server, restTime, customer));
+      addEvent(new SERVER_BACK(time + restTime, server));
+    } else if (c != null) {
+        serveCustomer(time, server, c);
+        return this;
+      }
     server.makeIdle();
     return this;
   }
 
   public SimState simulateServerRest(double time, double restTime, Server server, Customer customer) {
-    noteDone(time, server, customer);
     server.makeRest(time + restTime);
     return this;
   }
@@ -211,13 +214,7 @@ public class SimState {
     double doneTime = time + rng.genServiceTime();
     server.serve(customer);
     noteServed(time, server, customer);
-    if (serverRests()) {
-      double restTime = rng.genRestPeriod();
-      addEvent(new SERVER_REST(doneTime, server, restTime, customer));
-      addEvent(new SERVER_BACK(doneTime + restTime, server));
-    } else {
-      addEvent(new DoneEvent(doneTime, server, customer));
-    }
+    addEvent(new DoneEvent(doneTime, server, customer));
     return this;
   }
 
