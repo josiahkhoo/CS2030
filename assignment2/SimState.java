@@ -1,15 +1,63 @@
 package cs2030.simulator;
 
+import java.util.function.Function;
+
 /**
- * This class encapsulates all the simulation states.  There are four main
- * components: (i) the event queue, (ii) the statistics, (iii) the shop
- * (the servers) and (iv) the event logs.
+ * This class encapsulates all the simulation states. There are four main
+ * components: (i) the event queue, (ii) the statistics, (iii) the shop (the
+ * servers) and (iv) the event logs.
  *
  * @author atharvjoshi
  * @author weitsang
  * @version CS2030 AY19/20 Sem 1 Lab 7
  */
 public class SimState {
+
+  /**
+   * The Event class encapsulates information and methods pertaining to a
+   * Simulator event. This is an abstract class that should be subclassed into a
+   * specific event in the simulator. The {@code simulate} method must be written.
+   */
+  public class Event implements Comparable<Event> {
+    /** The time this event occurs at. */
+    private final double time;
+
+    /** The simulation function to apply on the SimState. */
+    private final Function<SimState, SimState> function;
+
+    /**
+     * Creates an event and initializes it.
+     *
+     * @param time The time of occurrence.
+     */
+    public Event(double time, Function<SimState, SimState> function) {
+      this.time = time;
+      this.function = function;
+    }
+
+    /**
+     * Defines natural ordering of events by their time. Events ordered in ascending
+     * order of their timestamps.
+     *
+     * @param other Another event to compare against.
+     * @return 0 if two events occur at same time, a positive number if this event
+     *         has later than other event, a negative number otherwise.
+     */
+    public int compareTo(Event other) {
+      return (int) Math.signum(this.time - other.time);
+    }
+
+    /**
+     * The abstract method that simulates this event.
+     *
+     * @param sim The simulator.
+     * @return The updated state after simulating this event.
+     */
+    public SimState simulate(SimState sim) {
+      return function.apply(sim);
+    }
+  }
+
   /** The priority queue of events. */
   private final PriorityQueue<Event> events;
 
@@ -33,10 +81,13 @@ public class SimState {
 
   /**
    * Constructor for creating the simulation state from scratch.
+   * 
    * @param numOfServers The number of servers.
-   * @param rng The random number generator.
+   * @param rng          The random number generator.
    */
-  public SimState(int numOfServers, int maxQueueLength, int numOfSelfCheckout, int numOfCustomers, double restingProbability, int seed, double arrivalRate, double serviceRate, double serviceTime, double greedyProbability) {
+  public SimState(int numOfServers, int maxQueueLength, int numOfSelfCheckout, int numOfCustomers,
+      double restingProbability, int seed, double arrivalRate, double serviceRate, double serviceTime,
+      double greedyProbability) {
     this.shop = new Shop(numOfServers, numOfSelfCheckout, maxQueueLength);
     this.stats = new Statistics();
     this.events = new PriorityQueue<Event>();
@@ -48,7 +99,8 @@ public class SimState {
 
   /**
    * Add an event to the simulation's event queue.
-   * @param  e The event to be added to the queue.
+   * 
+   * @param e The event to be added to the queue.
    * @return The new simulation state.
    */
   public SimState addEvent(Event e) {
@@ -57,11 +109,10 @@ public class SimState {
   }
 
   /**
-   * Retrieve the next event with earliest time stamp from the
-   * priority queue, and a new state.  If there is no more event, an
-   * Optional.empty will be returned.
-   * @return A pair object with an (optional) event and the new simulation
-   *     state.
+   * Retrieve the next event with earliest time stamp from the priority queue, and
+   * a new state. If there is no more event, an Optional.empty will be returned.
+   * 
+   * @return A pair object with an (optional) event and the new simulation state.
    */
   private Pair<Event, SimState> nextEvent() {
     Pair<Event, PriorityQueue<Event>> result = this.events.poll();
@@ -70,8 +121,9 @@ public class SimState {
 
   /**
    * Log a customer's arrival in the simulation.
+   * 
    * @param time The time the customer arrives.
-   * @param c The customer that arrrives.
+   * @param c    The customer that arrrives.
    * @return A new state of the simulation after the customer arrives.
    */
   private SimState noteArrival(double time, Customer c) {
@@ -80,10 +132,11 @@ public class SimState {
   }
 
   /**
-   * Log when a customer waits in the simulation.  
+   * Log when a customer waits in the simulation.
+   * 
    * @param time The time the customer starts waiting.
-   * @param s The server the customer is waiting for.
-   * @param c The customer who waits.
+   * @param s    The server the customer is waiting for.
+   * @param c    The customer who waits.
    * @return A new state of the simulation after the customer waits.
    */
   private SimState noteWait(double time, Server s, Customer c) {
@@ -92,10 +145,11 @@ public class SimState {
   }
 
   /**
-   * Log when a customer is served in the simulation.  
+   * Log when a customer is served in the simulation.
+   * 
    * @param time The time the customer arrives.
-   * @param s The server that serves the customer.
-   * @param c The customer that is served.
+   * @param s    The server that serves the customer.
+   * @param c    The customer that is served.
    * @return A new state of the simulation after the customer is served.
    */
   private SimState noteServed(double time, Server s, Customer c) {
@@ -107,11 +161,12 @@ public class SimState {
 
   /**
    * Log when a customer is done being served in the simulation.
+   * 
    * @param time The time the customer arrives.
-   * @param s The server that serves the customer.
-   * @param c The customer that is served.
+   * @param s    The server that serves the customer.
+   * @param c    The customer that is served.
    * @return A new state of the simulation after the customer is done being
-   *     served.
+   *         served.
    */
   private SimState noteDone(double time, Server s, Customer c) {
     System.out.printf("%.3f %s done serving by %s\n", time, c, s);
@@ -120,8 +175,9 @@ public class SimState {
 
   /**
    * Log when a customer leaves the shops without service.
-   * @param  time  The time this customer leaves.
-   * @param  customer The customer who leaves.
+   * 
+   * @param time     The time this customer leaves.
+   * @param customer The customer who leaves.
    * @return A new state of the simulation.
    */
   private SimState noteLeave(double time, Customer customer) {
@@ -131,8 +187,9 @@ public class SimState {
   }
 
   /**
-   * Simulates the logic of what happened when a customer arrives.
-   * The customer is either served, waiting to be served, or leaves.
+   * Simulates the logic of what happened when a customer arrives. The customer is
+   * either served, waiting to be served, or leaves.
+   * 
    * @param time The time the customer arrives.
    * @return A new state of the simulation.
    */
@@ -149,10 +206,10 @@ public class SimState {
   }
 
   /**
-   * Handle the logic of finding idle servers to serve the customer, 
-   * or a server that the customer can wait for, or leave.  Called
-   * from simulateArrival.
-   * @param time The time the customer arrives.
+   * Handle the logic of finding idle servers to serve the customer, or a server
+   * that the customer can wait for, or leave. Called from simulateArrival.
+   * 
+   * @param time     The time the customer arrives.
    * @param customer The customer to be served.
    * @return A new state of the simulation.
    */
@@ -177,10 +234,11 @@ public class SimState {
   }
 
   /**
-   * Simulate the logic of what happened when a customer is done being
-   * served.  The server either serve the next customer or becomes idle.
-   * @param time The time the service is done.
-   * @param server The server serving the customer.
+   * Simulate the logic of what happened when a customer is done being served. The
+   * server either serve the next customer or becomes idle.
+   * 
+   * @param time     The time the service is done.
+   * @param server   The server serving the customer.
    * @param customer The customer being served.
    * @return A new state of the simulation.
    */
@@ -189,11 +247,11 @@ public class SimState {
     Customer c = server.getWaitingCustomer();
     if (!(server instanceof SelfCheckout) && serverRests()) {
       double restTime = rng.genRestPeriod();
-      addEvent(new SERVER_REST(time, server, restTime, customer));
-      addEvent(new SERVER_BACK(time + restTime, server));
+      addEvent(new Event(time, state -> state.simulateServerRest(time, restTime, server, customer)));
+      addEvent(new Event(time + restTime, state -> state.simulateServerBack(time + restTime, server)));
     } else if (c != null) {
-        serveCustomer(time, server, c);
-        return this;
+      serveCustomer(time, server, c);
+      return this;
     }
     server.makeIdle();
     return this;
@@ -213,21 +271,22 @@ public class SimState {
     }
     server.makeIdle();
     return this;
-  } 
+  }
 
   /**
-   * Handle the logic of server serving customer.  A new done event
-   * is generated and scheduled.
-   * @param  time  The time this customer is served.
-   * @param  server The server serving this customer.
-   * @param  customer The customer being served.
+   * Handle the logic of server serving customer. A new done event is generated
+   * and scheduled.
+   * 
+   * @param time     The time this customer is served.
+   * @param server   The server serving this customer.
+   * @param customer The customer being served.
    * @return A new state of the simulation.
    */
   private SimState serveCustomer(double time, Server server, Customer customer) {
     double doneTime = time + rng.genServiceTime();
     server.serve(customer);
     noteServed(time, server, customer);
-    addEvent(new DoneEvent(doneTime, server, customer));
+    addEvent(new Event(doneTime, state -> state.simulateDone(doneTime, server, customer)));
     return this;
   }
 
@@ -240,9 +299,9 @@ public class SimState {
   }
 
   /**
-   * The main simulation loop.  Repeatedly get events from the event
-   * queue, simulate and update the event.  Return the final simulation
-   * state.
+   * The main simulation loop. Repeatedly get events from the event queue,
+   * simulate and update the event. Return the final simulation state.
+   * 
    * @return The final state of the simulation.
    */
   public SimState run() {
@@ -255,22 +314,25 @@ public class SimState {
 
   public SimState populate() {
     boolean firstCustomer = true;
-    double arrivalTime = 0; 
+    double arrivalTime = 0;
     for (int i = 0; i < numOfCustomers; i++) {
       if (firstCustomer) {
-          firstCustomer = false;
-          this.addEvent(new ArrivalEvent(arrivalTime));
-          continue;
+        firstCustomer = false;
+        double time = Double.valueOf(arrivalTime);
+        addEvent(new Event(time, state -> state.simulateArrival(time)));
+        continue;
       }
       arrivalTime += rng.genInterArrivalTime();
-      this.addEvent(new ArrivalEvent(arrivalTime));
+      double time = Double.valueOf(arrivalTime);
+      addEvent(new Event(time, state -> state.simulateArrival(time)));
     }
     return this;
   }
 
   /**
-   * Return a string representation of the simulation state, which
-   * consists of all the logs and the stats.
+   * Return a string representation of the simulation state, which consists of all
+   * the logs and the stats.
+   * 
    * @return A string representation of the simulation.
    */
   public String toString() {
