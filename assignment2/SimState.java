@@ -6,10 +6,6 @@ import java.util.function.Function;
  * This class encapsulates all the simulation states. There are four main
  * components: (i) the event queue, (ii) the statistics, (iii) the shop (the
  * servers) and (iv) the event logs.
- *
- * @author atharvjoshi
- * @author weitsang
- * @version CS2030 AY19/20 Sem 1 Lab 7
  */
 public class SimState {
 
@@ -28,7 +24,8 @@ public class SimState {
     /**
      * Creates an event and initializes it.
      *
-     * @param time The time of occurrence.
+     * @param time     The time of occurrence.
+     * @param function The function to be applied on the SimState.
      */
     public Event(double time, Function<SimState, SimState> function) {
       this.time = time;
@@ -48,7 +45,7 @@ public class SimState {
     }
 
     /**
-     * The abstract method that simulates this event.
+     * The method that simulates this event on the SimState passed in.
      *
      * @param sim The simulator.
      * @return The updated state after simulating this event.
@@ -207,7 +204,8 @@ public class SimState {
 
   /**
    * Handle the logic of finding idle servers to serve the customer, or a server
-   * that the customer can wait for, or leave. Called from simulateArrival.
+   * that the customer would wait for depending on its greed, or leave. Called
+   * from simulateArrival.
    * 
    * @param time     The time the customer arrives.
    * @param customer The customer to be served.
@@ -234,8 +232,8 @@ public class SimState {
   }
 
   /**
-   * Simulate the logic of what happened when a customer is done being served. The
-   * server either serve the next customer or becomes idle.
+   * Simulate the logic of what happens when a customer is done being served. The
+   * server either serves the next customer or becomes idle, or takes a rest.
    * 
    * @param time     The time the service is done.
    * @param server   The server serving the customer.
@@ -247,7 +245,7 @@ public class SimState {
     Customer c = server.getWaitingCustomer();
     if (!(server instanceof SelfCheckout) && serverRests()) {
       double restTime = rng.genRestPeriod();
-      addEvent(new Event(time, state -> state.simulateServerRest(time, restTime, server, customer)));
+      addEvent(new Event(time, state -> state.simulateServerRest(time, restTime, server)));
       addEvent(new Event(time + restTime, state -> state.simulateServerBack(time + restTime, server)));
     } else if (c != null) {
       serveCustomer(time, server, c);
@@ -257,11 +255,26 @@ public class SimState {
     return this;
   }
 
-  public SimState simulateServerRest(double time, double restTime, Server server, Customer customer) {
+  /**
+   * Simulate the logic of what happened when a server is resting.
+   * 
+   * @param time     The time the server starts resting.
+   * @param restTime The duration of the rest time.
+   * @param server   The server taking a break.
+   * @return A new state of the simulation.
+   */
+  public SimState simulateServerRest(double time, double restTime, Server server) {
     server.makeRest(time + restTime);
     return this;
   }
 
+  /**
+   * Simulate the logic of what happens when a server is back from its break.
+   * 
+   * @param time   The time the server is back from its break.
+   * @param server The server that was taking a break
+   * @return A new state of the simulation.
+   */
   public SimState simulateServerBack(double time, Server server) {
     server.makeBack();
     Customer c = server.getWaitingCustomer();
@@ -290,10 +303,20 @@ public class SimState {
     return this;
   }
 
+  /**
+   * Calculates whether a rest event for a server will occur.
+   * 
+   * @return true if the server decides to rest, false otherwise.
+   */
   private boolean serverRests() {
     return (rng.genRandomRest() < restingProbability);
   }
 
+  /**
+   * Calculates whether a greedy customer will be encountered.
+   * 
+   * @return true if the customer is greedy, false otherwise.
+   */
   private boolean customerIsGreedy() {
     return (rng.genCustomerType() < greedyProbability);
   }
@@ -312,6 +335,12 @@ public class SimState {
     return p.second;
   }
 
+  /**
+   * Populates the simulation with both greedy and normal customers iteratively,
+   * in the form of arrival events for each customer.
+   * 
+   * @return The simulation with every arrival events.
+   */
   public SimState populate() {
     boolean firstCustomer = true;
     double arrivalTime = 0;
