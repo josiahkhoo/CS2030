@@ -47,7 +47,9 @@ class Main {
         double restingRate = scanner.nextDouble();
         double restingProbability = scanner.nextDouble();
         double greedyProbability = scanner.nextDouble();
-        SimState state = new SimState(numOfServers, maxQueueLength, numOfSelfCheckout, numOfCustomers, restingProbability, seed, arrivalRate, serviceRate, restingRate, greedyProbability);
+        SimState state = new SimState(numOfServers, maxQueueLength, 
+            numOfSelfCheckout, numOfCustomers, restingProbability, 
+            seed, arrivalRate, serviceRate, restingRate, greedyProbability);
         return state;
     }
 
