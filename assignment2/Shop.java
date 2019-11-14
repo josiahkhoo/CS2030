@@ -29,9 +29,10 @@ class Shop {
     }
 
     /**
-     * Return the first idle server in the list.
+     * Return the first idle non-resting server in the list.
      *
-     * @return An idle server, or {@code null} if every server is busy.
+     * @return An idle non-resting server, or {@code null} if every server is busy
+     *         or resting.
      */
     public Server findIdleServer() {
         for (Server server : this.servers) {

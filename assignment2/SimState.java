@@ -11,8 +11,7 @@ public class SimState {
 
     /**
      * The Event class encapsulates information and methods pertaining to a
-     * Simulator event. This is an abstract class that should be subclassed into a
-     * specific event in the simulator. The {@code simulate} method must be written.
+     * Simulator event.
      */
     public class Event implements Comparable<Event> {
         /** The time this event occurs at. */
@@ -211,9 +210,9 @@ public class SimState {
     }
 
     /**
-     * Handle the logic of finding idle servers to serve the customer, or a server
-     * that the customer would wait for depending on its greed, or leave. Called
-     * from simulateArrival.
+     * Handle the logic of finding idle non-resting servers to serve the customer,
+     * or a server that the customer would wait for depending on its greed, or
+     * leave. Called from simulateArrival.
      * 
      * @param time     The time the customer arrives.
      * @param customer The customer to be served.
@@ -241,7 +240,7 @@ public class SimState {
 
     /**
      * Simulate the logic of what happens when a customer is done being served. The
-     * server either serves the next customer or becomes idle, or takes a rest.
+     * server either serves the next customer, becomes idle, or takes a break.
      * 
      * @param time     The time the service is done.
      * @param server   The server serving the customer.
@@ -266,7 +265,7 @@ public class SimState {
     }
 
     /**
-     * Simulate the logic of what happened when a server is resting.
+     * Simulate the logic of what happens when a server is resting.
      * 
      * @param time     The time the server starts resting.
      * @param restTime The duration of the rest time.
@@ -282,7 +281,7 @@ public class SimState {
      * Simulate the logic of what happens when a server is back from its break.
      * 
      * @param time   The time the server is back from its break.
-     * @param server The server that was taking a break
+     * @param server The server that was taking a break.
      * @return A new state of the simulation.
      */
     public SimState simulateServerBack(double time, Server server) {

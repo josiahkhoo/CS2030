@@ -64,6 +64,11 @@ class Server {
         return this.currentCustomer == null;
     }
 
+    /**
+     * The waiting queue size of the current server.
+     * 
+     * @return waiting queue size.
+     */
     public int waitingQueueSize() {
         return this.waitingCustomerQueue.size();
     }
@@ -133,7 +138,7 @@ class Server {
     }
 
     /**
-     * Makes the server come back from his/her rest.
+     * Makes the server return from his/her rest.
      * 
      * @return This server that is no longer resting.
      */

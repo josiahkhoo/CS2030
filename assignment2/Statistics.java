@@ -4,9 +4,6 @@ package cs2030.simulator;
  * This class stores stats about the simulation. In particular, the average
  * waiting time, the number of customers who left, and the number of customers
  * who were served, are stored.
- *
- * @author Ooi Wei Tsang
- * @version CS2030 AY19/20 Sem 1 Lab 7
  */
 class Statistics {
     /** Sum of time spent waiting for all customers. */
@@ -22,7 +19,7 @@ class Statistics {
      * Construct an Statistics object with 0 waiting time, 0 served customer, and 0
      * lost customer.
      * 
-     * @return A new Statistics object
+     * @return A new Statistics object.
      */
     public Statistics() {
         this.totalWaitingTime = 0;
@@ -33,7 +30,7 @@ class Statistics {
     /**
      * Mark that a customer is served.
      * 
-     * @return A new Statistics object with updated stats
+     * @return A new Statistics object with updated stats.
      */
     public Statistics serveOneCustomer() {
         this.totalNumOfServedCustomers += 1;
@@ -43,7 +40,7 @@ class Statistics {
     /**
      * Mark that a customer is lost.
      * 
-     * @return A new Statistics object with updated stats
+     * @return A new Statistics object with updated stats.
      */
     public Statistics looseOneCustomer() {
         this.totalNumOfLostCustomers += 1;
@@ -54,7 +51,7 @@ class Statistics {
      * Accumulate the waiting time of a customer.
      * 
      * @param time The time a customer waited.
-     * @return A new Statistics object with updated stats
+     * @return A new Statistics object with updated stats.
      */
     public Statistics recordWaitingTime(double time) {
         this.totalWaitingTime += time;

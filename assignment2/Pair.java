@@ -14,8 +14,8 @@ public final class Pair<T, U> {
     /**
      * A private constructor for a new pair.
      * 
-     * @param t First item in the pair
-     * @param u Second item in the pair
+     * @param t First item in the pair.
+     * @param u Second item in the pair.
      **/
     private Pair(T t, U u) {
         this.first = t;
@@ -25,9 +25,9 @@ public final class Pair<T, U> {
     /**
      * Create a new pair of items.
      * 
-     * @param t First item in the pair
-     * @param u Second item in the pair
-     * @return The new pair
+     * @param t First item in the pair.
+     * @param u Second item in the pair.
+     * @return The new pair.
      **/
     public static <T, U> Pair<T, U> of(T t, U u) {
         return new Pair<>(t, u);

@@ -4,20 +4,19 @@ import java.util.Scanner;
 import cs2030.simulator.SimState;
 
 /**
- * The LabOFourA class is the entry point into Lab 4a.
- *
- * @author atharvjoshi
- * @author weitsang
- * @version CS2030 AY19/20 Sem 1 Lab 7
- */
+ * This is the main class that will contain the main method to be executed at
+ * run-time.
+ **/
 class Main {
     /**
-     * The main method for Lab 4a. Reads data from file and
-     * then run a simulation based on the input data.
+     * The main method that reads data from file and then run a simulation based on
+     * the input data.
      *
-     * @param args two arguments, first an integer specifying number of servers
-     *     in the shop. Second a file containing a sequence of double values, each
-     *     being the arrival time of a customer (in any order).
+     * @param args A file containing a sequence of 5 int values and 5 double values
+     *             in the following order: seed, number of servers, number of self
+     *             checkout counters, maximum queue length, number of customers,
+     *             arrival rate, service rate, resting probability, greedy
+     *             probability.
      */
     public static void main(String[] args) {
         Scanner scanner = createScanner(args);
@@ -47,20 +46,20 @@ class Main {
         double restingRate = scanner.nextDouble();
         double restingProbability = scanner.nextDouble();
         double greedyProbability = scanner.nextDouble();
-        SimState state = new SimState(numOfServers, maxQueueLength, 
-            numOfSelfCheckout, numOfCustomers, restingProbability, 
-            seed, arrivalRate, serviceRate, restingRate, greedyProbability);
+        SimState state = new SimState(numOfServers, maxQueueLength, numOfSelfCheckout, 
+                numOfCustomers, restingProbability, seed, arrivalRate, 
+                serviceRate, restingRate, greedyProbability);
         return state;
     }
 
     /**
-     * Create and return a scanner. If a command line argument is given,
-     * treat the argument as a file and open a scanner on the file. Else,
-     * create a scanner that reads from standard input.
+     * Create and return a scanner. If a command line argument is given, treat the
+     * argument as a file and open a scanner on the file. Else, create a scanner
+     * that reads from standard input.
      *
      * @param args The arguments provided for simulation.
      * @return A scanner or {@code null} if a filename is provided but the file
-     *     cannot be open.
+     *         cannot be open.
      */
     private static Scanner createScanner(String[] args) {
         Scanner scanner = null;
@@ -77,8 +76,7 @@ class Main {
                 scanner = new Scanner(fileReader);
             }
         } catch (FileNotFoundException exception) {
-            System.err.println("Unable to open file " + args[0] + " "
-                    + exception);
+            System.err.println("Unable to open file " + args[0] + " " + exception);
         }
         return scanner;
     }
