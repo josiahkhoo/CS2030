@@ -79,20 +79,20 @@ public class SimState {
     /**
      * Constructor for creating the simulation state from scratch.
      * 
-     * @param numOfServers
-     * @param maxQueueLength
-     * @param numOfSelfCheckout
-     * @param numOfCustomers
-     * @param restingProbability
-     * @param seed
-     * @param arrivalRate
-     * @param serviceRate
-     * @param serviceTime
-     * @param greedyProbability
+     * @param numOfServers       The number of servers.
+     * @param maxQueueLength     The maximum queue length.
+     * @param numOfSelfCheckout  The number of self-checkout counters.
+     * @param numOfCustomers     The number of customers.
+     * @param restingProbability The probability of the server resting.
+     * @param seed               The seed for the random number generator.
+     * @param arrivalRate        The arrival rate of the customers.
+     * @param serviceRate        The service rate of the servers.
+     * @param serviceTime        The service time of the servers.
+     * @param greedyProbability  The probability of encountering a greedy customer.
      */
-    public SimState(int numOfServers, int maxQueueLength, int numOfSelfCheckout, int numOfCustomers,
-            double restingProbability, int seed, double arrivalRate, double serviceRate, double serviceTime,
-            double greedyProbability) {
+    public SimState(int numOfServers, int maxQueueLength, int numOfSelfCheckout, 
+            int numOfCustomers, double restingProbability, int seed, double arrivalRate, 
+            double serviceRate, double serviceTime, double greedyProbability) {
         this.shop = new Shop(numOfServers, numOfSelfCheckout, maxQueueLength);
         this.stats = new Statistics();
         this.events = new PriorityQueue<Event>();
@@ -253,8 +253,10 @@ public class SimState {
         Customer c = server.getWaitingCustomer();
         if (!(server instanceof SelfCheckout) && serverRests()) {
             double restTime = rng.genRestPeriod();
-            addEvent(new Event(time, state -> state.simulateServerRest(time, restTime, server)));
-            addEvent(new Event(time + restTime, state -> state.simulateServerBack(time + restTime, server)));
+            addEvent(new Event(time, state -> 
+                        state.simulateServerRest(time, restTime, server)));
+            addEvent(new Event(time + restTime, state -> 
+                        state.simulateServerBack(time + restTime, server)));
         } else if (c != null) {
             serveCustomer(time, server, c);
             return this;

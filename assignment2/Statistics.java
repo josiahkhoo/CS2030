@@ -69,7 +69,7 @@ class Statistics {
      *         customer.
      */
     public String toString() {
-        return String.format("[%.3f %d %d]", totalWaitingTime / totalNumOfServedCustomers, totalNumOfServedCustomers,
-                totalNumOfLostCustomers);
+        return String.format("[%.3f %d %d]", totalWaitingTime / totalNumOfServedCustomers, 
+                totalNumOfServedCustomers, totalNumOfLostCustomers);
     }
 }
