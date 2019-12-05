@@ -1,5 +1,5 @@
 # CS2030
-AY19/20 Semester 1 CS2030 Programming Methodology II
+AY19/20 Semester 1 CS2030 Programming Methodology II (Hopefully you will find this summary useful)
 
 # Chapter 1 - Programming Paradigms
 Imperative (procedural)
